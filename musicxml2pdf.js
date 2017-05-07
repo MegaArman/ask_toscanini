@@ -3,8 +3,8 @@ const fs = require("fs");
 
 const xmlScoresDir = "./scores/";
 const pdfScoresDir = "./scores_pdf/";
-
 const xmlPieceNames = fs.readdirSync(xmlScoresDir);
+
 xmlPieceNames.forEach((xmlPieceName) =>
 {
 	let pdfName = xmlPieceName.replace(".xml", ".pdf");
