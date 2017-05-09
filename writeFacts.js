@@ -18,11 +18,10 @@ fileNames.forEach((fileName) =>
 	
 	instrumentNames.forEach((instrumentName) => 
 	{
-		let range = {};
-		range["minPitch"] = scoreSearcher.getMinPitch(instrumentName);
-		range["maxPitch"] = scoreSearcher.getMaxPitch(instrumentName);
+		let range = scoreSearcher.getPitchRange(instrumentName);
 		instrumentRanges[instrumentName.toLowerCase()] = range;
-	});	
+	});
+
 	fact["instrumentRanges"] = instrumentRanges;
 	fact["tempos"] = scoreSearcher.getTempos();
   fact["keySignatures"] = scoreSearcher.getKeySignatures(); 
