@@ -76,7 +76,7 @@ function onRequest(request, response)
 		{
 			requestBody += data;
 
-			if (requestBody.length > 1e4) //
+			if (requestBody.length > 1e3) //
 			{
 				response.writeHead(413, "Request Entity Too Large", {"Content-Type": "text/html"});
 				response.end("<html>failed</html>");
@@ -85,8 +85,7 @@ function onRequest(request, response)
 		request.on("end", ()=> 
 		{
 			console.log("requestBody", requestBody);
-			response.writeHead(200, {"Content-Type": "text/plain"});
-		  
+			response.writeHead(200, {"Content-Type": "text/plain"}); 
 			const query = (requestBody === "lucky") ? "lucky" : JSON.parse(requestBody);
 			response.end(JSON.stringify(searchFacts(query)));
       
