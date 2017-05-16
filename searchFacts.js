@@ -49,19 +49,22 @@ module.exports = (query) => //ex: invoked w searchFacts(query)
   //iterate over pieces in our facts database
   //................value, key
   factsMap.forEach((pieceFacts, pieceName) =>
-	{
+  {
     
     //check if our piece is by the composer they want
     if (queryComposer && !pieceName.toLowerCase().includes(queryComposer))
+    {
       return false;
-    
+    }
     //check if our piece has a tempo range they want
     if (queryTempo)
     {
       for (let tempo of pieceFacts["tempos"])
       {
         if (tempo < queryTempo["minPitch"] || tempo > queryTempo["maxPitch"])
+        {
           return false;
+        }
       }
     }
     
@@ -73,36 +76,37 @@ module.exports = (query) => //ex: invoked w searchFacts(query)
     }
 
     //see if piece has query instruments and if they're in range
-    //to do so we need to check substrings, so "trumpet in C" passes for query "trumpet"
+    //to do so we need to check substrings, 
+    //so "trumpet in C" passes for query "trumpet"
     const pieceInstrumentNames = Object.keys(pieceFacts["instrumentRanges"]);
-    //console.log("queryInstrumentNames", queryInstrumentNames);
      
     for (let queryInstrumentName of queryInstrumentNames)
-		{
+    {
       let equivalentInstrumentName;
   
       for (let pieceInstrumentName of pieceInstrumentNames)
       {
         if (pieceInstrumentName.includes(queryInstrumentName))
+        {
            equivalentInstrumentName = pieceInstrumentName;
+        }
       }
       
        if (equivalentInstrumentName === undefined)
        {
-         // console.log(pieceName + "does not have ", queryInstrumentName);
           return false;
        }
        
-     //  console.log("equivalentInstrumentName ", equivalentInstrumentName);
-			 const minPitch = pieceFacts["instrumentRanges"][equivalentInstrumentName]["minPitch"];
-			 const maxPitch = pieceFacts["instrumentRanges"][equivalentInstrumentName]["maxPitch"];
-			 const queryMinPitch = query[queryInstrumentName]["minPitch"];
-			 const queryMaxPitch = query[queryInstrumentName]["maxPitch"];
-	
-			 if (minPitch < queryMinPitch || maxPitch > queryMaxPitch)
-		   {
-         //console.log(pieceName + " range issue");
-         return false
+       const minPitch = 
+        pieceFacts["instrumentRanges"][equivalentInstrumentName]["minPitch"];
+       const maxPitch = 
+        pieceFacts["instrumentRanges"][equivalentInstrumentName]["maxPitch"];
+       const queryMinPitch = query[queryInstrumentName]["minPitch"];
+       const queryMaxPitch = query[queryInstrumentName]["maxPitch"];
+
+       if (minPitch < queryMinPitch || maxPitch > queryMaxPitch)
+       {
+         return false;
        }          	
     }
     
@@ -111,6 +115,6 @@ module.exports = (query) => //ex: invoked w searchFacts(query)
   });
   
   console.timeEnd("Took");
-	return matchingPieces;
-}
+ return matchingPieces;
+};
 

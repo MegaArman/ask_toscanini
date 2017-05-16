@@ -7,19 +7,21 @@ const xmlPieceNames = fs.readdirSync(xmlScoresDir);
 
 xmlPieceNames.forEach((xmlPieceName) =>
 {
-	let pdfName = xmlPieceName.replace(".xml", ".pdf");
+  let pdfName = xmlPieceName.replace(".xml", ".pdf");
 	
-	exec("musescore " + xmlScoresDir + xmlPieceName + " -o " + pdfScoresDir + pdfName,
-		function (error, stdout, stderr)
-		{
-			//musescore may cause errors (segfaults) but may still produce the pdfs- just be aware...
-			console.log("stdout: " + stdout);
-			console.log("stderr: " + stderr);
+  exec("musescore " + xmlScoresDir + xmlPieceName + " -o " 
+       + pdfScoresDir + pdfName,
+    function (error, stdout, stderr)
+    {
+      //musescore may cause errors (segfaults)
+      //but may still produce the pdfs- just be aware...
+      console.log("stdout: " + stdout);
+      console.log("stderr: " + stderr);
 
-			if (error !== null) 
-			{
-				console.log("exec error: " + error);
-			}
-		});
+      if (error !== null) 
+      {
+        console.log("exec error: " + error);
+      }
+    });
 });
 

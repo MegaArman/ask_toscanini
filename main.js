@@ -1,5 +1,6 @@
 //The goal of this file is to submit a  query of format
-//{"flute": {"minPitch": 50, "maxPitch": 80}, "viola": {"minPitch": 40, "maxPitch": 74}};
+//{"flute": {"minPitch": 50, "maxPitch": 80}, 
+//"viola": {"minPitch": 40, "maxPitch": 74}};
 
 function ascii(c)
 {
@@ -49,7 +50,7 @@ function noteOctaveToMIDI(noteOctave)
     octave = parseInt(noteOctave.charAt(2));  
   }
   //no accidental
-  else if (noteOctave.length == 2)
+  else if (noteOctave.length === 2)
   {
     accidental = 0;
     octave = parseInt(noteOctave.charAt(1));
@@ -59,9 +60,9 @@ function noteOctaveToMIDI(noteOctave)
   return MIDI;
 }
 
-$("#search").on('keyup', (e) =>
+$("#search").on("keyup", (e) =>
 {
-  if (e.keyCode == 13)
+  if (e.keyCode === 13)
   {
    return false;
   }
@@ -86,10 +87,15 @@ $("#ask").on("click", ()=>
     {
       if ("composer" in queries)
       {
-        if (queryPart[0].length != 0)
-          alert(queryPart[0] + "- we only support querying for one composer at this time, please fix");
+        if (queryPart[0].length !== 0)
+				{
+          alert(queryPart[0] + "- we only support querying for" + 
+					+ "one composer at this time, please fix");
+				}
         else
+				{
           alert("and must be followed by a query");
+				}
         validQuery = false;
         return;
       } 
@@ -109,7 +115,7 @@ $("#ask").on("click", ()=>
      
       const keyWithoutAccidental = queryPart[1].charAt(0).toUpperCase();
       queries["key"] = (queryPart[1].length === 2) ? 
-                       keyWithoutAccidental + queryPart[1].charAt(1) : keyWithoutAccidental;
+      keyWithoutAccidental + queryPart[1].charAt(1) : keyWithoutAccidental;
 
       console.log("post insert key", queries);
       return;
@@ -118,7 +124,8 @@ $("#ask").on("click", ()=>
     if (queryPart.length !== 3)
     {
       validQuery = false;
-      alert("query starting with " + queryPart[0] + " is not of appropriate length- see instructions");
+      alert("query starting with " + queryPart[0] + 
+      " is not of appropriate length- see instructions");
       return;
     }
 
@@ -162,7 +169,8 @@ $("#ask").on("click", ()=>
     if (minPitch > maxPitch)
     {
       validQuery = false;
-      alert(queryPart[0] + " -minimum should not be greater than maximum, please fix!"); 
+      alert(queryPart[0] + 
+      " -minimum should not be greater than maximum, please fix!"); 
       return;
     }
 
@@ -187,17 +195,19 @@ $("#ask").on("click", ()=>
         $("#query").text($("#search").val()); 
         const scores = JSON.parse(scoresJSON);
 				
-				scores.forEach((scoreName) =>
+	scores.forEach((scoreName) =>
         {
-					let dir = "./scores/"
+          let dir = "./scores/";
 
-					if($('#test1').is(':checked')) {
-						scoreName = scoreName.replace(".xml", ".pdf");
-						dir = "./scores_pdf/" 
-					}
+          if($("#test1").is(":checked")) 
+          {
+                  scoreName = scoreName.replace(".xml", ".pdf");
+                  dir = "./scores_pdf/"; 
+          }
 
-					$("#matchingScores").append("<a href='" + dir + scoreName + "'" +  
-            "class='download collection-item'" + "download>" + scoreName + "</a>"); 
+          $("#matchingScores").append("<a href='" + dir + scoreName + "'" +  
+            "class='download collection-item'" + "download>"
+            + scoreName + "</a>"); 
         });
       },      
       error: () => alert("no response from server")
@@ -219,12 +229,11 @@ $("#lucky").on("click", () =>
       $("#query").text("");
 
       let scoreName = JSON.parse(scoresJSON);
-			let dir = "./scores";
 
- 			if($('#test1').is(':checked')) {
-				scoreName = scoreName.replace(".xml", ".pdf");
-				dir = "./scores_pdf" 
-			}
+      if($("#test1").is(":checked"))
+      {
+        scoreName = scoreName.replace(".xml", ".pdf");
+      }
 
       $("#matchingScores").append("<a href='./scores/" + scoreName + "'" +  
         "class='download collection-item'" + "download>" + scoreName + "</a>"); 
