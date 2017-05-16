@@ -2,7 +2,7 @@
 const http = require("http");
 const fs = require("fs");
 const searchFacts = require("./searchFacts");
-const createQuery = require("./createQuery");
+const createQueryObject = require("./createQueryObject");
 const port = 7999;
 
 function send404Response(response)
@@ -89,7 +89,7 @@ function onRequest(request, response)
       console.log("requestBody", requestBody);
       response.writeHead(200, {"Content-Type": "text/plain"}); 
       const queryString = requestBody; 
-      const queryObject = createQuery(queryString);
+      const queryObject = createQueryObject(queryString);
 
       //error string
       if (typeof queryObject === "string")
