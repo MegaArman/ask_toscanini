@@ -9,7 +9,7 @@ const factsMap = new Map(JSON.parse(factsJSON));
 module.exports = (query) => //ex: invoked w searchFacts(query)
 {
   console.time("Took");
-  if (query === "lucky")
+  if (query["composer"] === "lucky")
   {
     //get # between 0 and factsMap.length - 1
     const r = Math.floor(Math.random() * (factsMap.size));
