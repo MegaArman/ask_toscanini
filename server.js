@@ -1,4 +1,3 @@
-// Load the http module to create an http server.
 const http = require("http");
 const fs = require("fs");
 const searchFacts = require("./searchFacts");

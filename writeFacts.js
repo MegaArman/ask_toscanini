@@ -1,5 +1,4 @@
-// Load the http module to create an http server.
-
+//writeFacts will extract and write facts of a score to a file
 console.time("Took");
 const fs = require("fs");
 const ScoreSearcher = require("./ScoreSearcher.js");

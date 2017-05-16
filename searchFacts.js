@@ -1,3 +1,6 @@
+//The goal of searchFacts is to search facts produced
+//by writeFacts
+
 const fs = require("fs");
 const factsJSON = fs.readFileSync("./facts.json");
 const factsMap = new Map(JSON.parse(factsJSON));

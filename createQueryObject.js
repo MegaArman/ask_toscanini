@@ -2,6 +2,8 @@
 //{"flute": {"minPitch": 50, "maxPitch": 80},
 //"viola": {"minPitch": 40, "maxPitch": 74}};
 //from a string like "flute 50 80 and viola 40 74"
+//if the query string is invalid, a string containing "ERROR" 
+//will be returned
 function ascii(c)
 {
   return c.charCodeAt(0);

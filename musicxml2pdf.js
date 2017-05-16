@@ -1,3 +1,5 @@
+//converts a directory of MusicXML to pdf
+
 const exec = require("child_process").exec;
 const fs = require("fs");
 

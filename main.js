@@ -1,7 +1,4 @@
-//The goal of this file is to submit a  query of format
-//{"flute": {"minPitch": 50, "maxPitch": 80}, 
-//"viola": {"minPitch": 40, "maxPitch": 74}};
-
+//submit query strings to server...
 $("#search").on("keyup", (e) =>
 {
   if (e.keyCode === 13)
