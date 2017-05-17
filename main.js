@@ -1,4 +1,15 @@
 //submit query strings to server...
+
+const pdfDir = "./scores_pdf/";
+const musicXMLDir = "./scores/";
+
+function makeScoreDownloadLink(scoreName) 
+{
+ const dir = scoreName.includes("pdf") ? pdfDir : musicXMLDir;
+ return "<a href='" + dir + scoreName + "'" +  
+         "class='download collection-item'" + "download>"+ scoreName + "</a>";
+}
+
 $("#search").on("keyup", (e) =>
 {
   if (e.keyCode === 13)
@@ -30,17 +41,12 @@ $("#ask").on("click", ()=>
                           
       scores.forEach((scoreName) =>
       {
-        let dir = "./scores/";
-
         if($("#test1").is(":checked")) 
         {
           scoreName = scoreName.replace(".xml", ".pdf");
-          dir = "./scores_pdf/"; 
         }
 
-        $("#matchingScores").append("<a href='" + dir + scoreName + "'" +  
-          "class='download collection-item'" + "download>"
-          + scoreName + "</a>"); 
+        $("#matchingScores").append(makeScoreDownloadLink(scoreName)); 
       });
     },      
     error: () => alert("no response from server")
@@ -67,8 +73,7 @@ $("#lucky").on("click", () =>
         scoreName = scoreName.replace(".xml", ".pdf");
       }
 
-      $("#matchingScores").append("<a href='./scores/" + scoreName + "'" +  
-        "class='download collection-item'" + "download>" + scoreName + "</a>"); 
+      $("#matchingScores").append(makeScoreDownloadLink(scoreName)); 
     },      
     error: () => alert("no response from server")
   });
