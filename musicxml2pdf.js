@@ -3,8 +3,8 @@
 const exec = require("child_process").exec;
 const fs = require("fs");
 
-const xmlScoresDir = "./scores/";
-const pdfScoresDir = "./scores_pdf/";
+const xmlScoresDir = "./musicxml_scores/";
+const pdfScoresDir = "./pdf_scores/";
 const xmlPieceNames = fs.readdirSync(xmlScoresDir);
 
 xmlPieceNames.forEach((xmlPieceName) =>

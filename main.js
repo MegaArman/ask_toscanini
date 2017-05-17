@@ -1,11 +1,11 @@
 //submit query strings to server...
 
-const pdfDir = "./scores_pdf/";
-const musicXMLDir = "./scores/";
+const pdfDir = "./pdf_scores/";
+const musicxmlDir = "./musicxml_scores/";
 
 function makeScoreDownloadLink(scoreName) 
 {
- const dir = scoreName.includes("pdf") ? pdfDir : musicXMLDir;
+ const dir = scoreName.includes("pdf") ? pdfDir : musicxmlDir;
  return "<a href='" + dir + scoreName + "'" +  
          "class='download collection-item'" + "download>"+ scoreName + "</a>";
 }

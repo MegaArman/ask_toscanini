@@ -3,6 +3,8 @@ const fs = require("fs");
 const searchFacts = require("./searchFacts");
 const createQueryObject = require("./createQueryObject");
 const port = 7999;
+const pdfDir = "/pdf_scores/";
+const musicxmlDir = "/musicxml_scores/";
 
 function send404Response(response)
 {
@@ -30,11 +32,12 @@ function onRequest(request, response)
       response.writeHead(200, {"Content-Type": "text/javascript"});
       fs.createReadStream("./main.js").pipe(response);
     }
-    else if (request.url.includes("/scores/")
+    else if (request.url.includes(musicxmlDir)
              && request.url.includes(".xml"))
     {
-      const score = request.url.replace("/scores/", "");
-      const readStream = fs.createReadStream("./scores/" + score);
+      const scoreName = request.url.replace(musicxmlDir, "");
+      const relPath = "." + musicxmlDir + scoreName;
+      const readStream = fs.createReadStream(relPath);
       
       readStream.on("open", ()=>
       {
@@ -45,23 +48,26 @@ function onRequest(request, response)
       readStream.on("error", () =>
       {
         send404Response(response);
+        console.log("xml not found " + relPath);
       }); 
     }
-     else if (request.url.includes("/scores_pdf/")
+     else if (request.url.includes(pdfDir)
            && request.url.includes(".pdf"))
     {
-      const score = request.url.replace("/scores_pdf/", "");
-      const readStream = fs.createReadStream("./scores_pdf/" + score);
+      const scoreName = request.url.replace(pdfDir, "");
+      const relPath = "." + pdfDir + scoreName;
+      const readStream = fs.createReadStream(relPath);
       
       readStream.on("open", ()=>
       {
-        response.writeHead(200, {"Content-Type": "text/xml"});
+        response.writeHead(200, {"Content-Type": "application/pdf"});
         readStream.pipe(response);
       });
 
       readStream.on("error", () =>
       {
         send404Response(response);
+        console.log("pdf not found " + relPath);
       }); 
     }
     else
@@ -103,6 +109,7 @@ function onRequest(request, response)
   }
   else
   {
+    console.log("bad request, will send 404");
     send404Response(response);
   }
 }
