@@ -10,7 +10,7 @@
       body
       {
         margin:64px;
-        font-size: large;
+        font-size: medium;
       }
 
       ul, p
@@ -34,25 +34,29 @@
       .logo 
       {
         display: block;
-        margin-left: auto;
-        margin-right:auto;
+        width: 100%;
       }
-			
+
       #ask:hover, #lucky:hover
       {
         background-color:#ff4000 !important;
       }	
-	
+
+      #ask 
+      {
+        margin-bottom: 20px; 
+      }
+      
+      #lucky 
+      {
+        margin-bottom: 20px;
+      }
+      
       #inputField
       {
         color:black;
       }
 		  
-      #lucky 
-      {
-        margin-left: 12px;
-      }
-			
       #matchingScores 
       {
         margin-top: 32px;
@@ -95,8 +99,48 @@
       {
         margin-bottom: 32px;
       }
+
+      @media only screen and (min-width: 663px)
+      {
+        /* tablets and desktop */
+        body 
+        {
+          font-size: large;
+        }
+
+        .logo
+        {
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        #lucky
+        {
+          margin-left: 12px;
+        }
+      }
+      
+      @media only screen and (min-width: 900px)
+      {
+        /* Large devices */
+        .logo 
+        {
+          width: 66%;
+        }  
+      }
+
+       @media only screen and (min-width: 1200px)
+      {
+        /* Large devices */
+        .logo 
+        {
+          width: 40%;
+        }  
+      }
+
     </style>
   </head>
+
 
   <body>
     <img class="logo" src="https://raw.githubusercontent.com/MegaArman/Ask_Toscanini/master/Ask_Toscanini!.png"
