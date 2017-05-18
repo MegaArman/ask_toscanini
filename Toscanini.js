@@ -73,17 +73,17 @@ function makeInstrumentObjects(musicObj)
 
 //=============================================================================
 //"class"
-const ScoreSearcher = (musicObj) =>
+const Toscanini = (musicObj) =>
 {
   //"private" variables..note state is safest kept constant-------------------
-  const scoreSearcher = {};
+  const toscanini = {};
   const instrumentObjects = makeInstrumentObjects(musicObj);
 
   //"private" functions in scope------------------------------
   //...ex: function poop() { ... }
 
   //"public" functions---------------------------
-  scoreSearcher.findValsByKey = (targetKey) =>
+  toscanini.findValsByKey = (targetKey) =>
   {
     function process(key,value) //called with every property and it"s value
     {
@@ -96,9 +96,9 @@ const ScoreSearcher = (musicObj) =>
     traverse(musicObj, process);
   };
 
-  scoreSearcher.getInstrumentNames = () => Object.keys(instrumentObjects);
+  toscanini.getInstrumentNames = () => Object.keys(instrumentObjects);
 
-  scoreSearcher.getPitchRange = (instrumentName) =>//of the whole piece
+  toscanini.getPitchRange = (instrumentName) =>//of the whole piece
   {
     let jsObj = instrumentName ? instrumentObjects[instrumentName] : musicObj;
     let midiNum = 0;
@@ -135,7 +135,7 @@ const ScoreSearcher = (musicObj) =>
     return range;
   }; 
 
-  scoreSearcher.getKeySignatures = () =>
+  toscanini.getKeySignatures = () =>
   {
     let keySignatures = [];
 
@@ -165,7 +165,7 @@ const ScoreSearcher = (musicObj) =>
     return keySignatures;
   };
 
-  scoreSearcher.getInstrumentsWithMelody = (melodyString) =>
+  toscanini.getInstrumentsWithMelody = (melodyString) =>
   {
     let tempStrNotes = "";
     let instrumentsWithMelody = [];
@@ -192,7 +192,7 @@ const ScoreSearcher = (musicObj) =>
       }
       else if (key === "octave")
       {
-        //Must do scoreSearcher... suppose there"s a Cb
+        //Must do toscanini... suppose there"s a Cb
         midiNum += parseInt(value) * 12;
         tempStrNotes += midiNumToNote(midiNum);
         midiNum = 0; //"octave" is the last key in a note, so reset
@@ -214,7 +214,7 @@ const ScoreSearcher = (musicObj) =>
     return instrumentsWithMelody;
   };
 
-  scoreSearcher.getTempos = () =>
+  toscanini.getTempos = () =>
   {
     let tempos = [];
 
@@ -236,7 +236,7 @@ const ScoreSearcher = (musicObj) =>
     return tempos;
   };
 
-  scoreSearcher.getAccidentals = () =>
+  toscanini.getAccidentals = () =>
   {
     //Sharps/flats for a given note
     let currKey = {"C": 0, "D": 0, "E": 0, "F": 0, "G": 0, "A": 0, "B": 0};     
@@ -289,26 +289,28 @@ const ScoreSearcher = (musicObj) =>
     return accidentals;
   };
 
-  return scoreSearcher;
-}; //ScoreSearcher 
+  return toscanini;
+}; //Toscanini 
 
 const xml2js = require("xml2js");
 const parser = new xml2js.Parser({explicitArray: false, mergeAttrs: true});
 
-// similar to a "constructor"
-module.exports = (MusicXML) =>
+// similar to a "constructor", converts musicxml to a javascript object
+// creates and returns a Toscanini instance
+module.exports = (musicxml) =>
 {
-  let scoreSearcher;
+  let toscanini;
 
-  parser.parseString(MusicXML, function (err, jsObj)
+  //musicObj is the resulting JS object. musicxml->musicObj
+  parser.parseString(musicxml, function (err, musicObj)
   {
     if (err)
     {
       throw err;
     }
-    scoreSearcher = ScoreSearcher(jsObj);
+    toscanini = Toscanini(musicObj);
   });
 
-  return scoreSearcher;
+  return toscanini;
 };
 

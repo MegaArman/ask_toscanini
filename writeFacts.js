@@ -1,7 +1,7 @@
 //writeFacts will extract and write facts of a score to a file
 console.time("Took");
 const fs = require("fs");
-const ScoreSearcher = require("./ScoreSearcher.js");
+const Toscanini = require("./Toscanini.js");
 
 const factsDB = new Map();
 const fileNames = fs.readdirSync("./scores");
@@ -9,20 +9,20 @@ fileNames.forEach((fileName) =>
 {
   console.log("./scores/" + fileName);
   const musicXML = fs.readFileSync("./scores/" + fileName);
-  const scoreSearcher = ScoreSearcher(musicXML);
-  const instrumentNames = scoreSearcher.getInstrumentNames(); //[]
+  const toscanini = Toscanini(musicXML);
+  const instrumentNames = toscanini.getInstrumentNames(); //[]
   const fact = {};
   const instrumentRanges = {};
   
   instrumentNames.forEach((instrumentName) => 
   {
-    let range = scoreSearcher.getPitchRange(instrumentName);
+    let range = toscanini.getPitchRange(instrumentName);
     instrumentRanges[instrumentName.toLowerCase()] = range;
   });
 
   fact["instrumentRanges"] = instrumentRanges;
-  fact["tempos"] = scoreSearcher.getTempos();
-  fact["keySignatures"] = scoreSearcher.getKeySignatures(); 
+  fact["tempos"] = toscanini.getTempos();
+  fact["keySignatures"] = toscanini.getKeySignatures(); 
   factsDB.set(fileName, fact);
 });
 
