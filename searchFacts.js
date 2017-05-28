@@ -1,9 +1,9 @@
 //The goal of searchFacts is to search facts produced
 //by writeFacts
-
+"use strict";
 const fs = require("fs");
 const factsJSON = fs.readFileSync("./facts.json");
-const factsMap = new Map(JSON.parse(factsJSON));
+const factsDB = JSON.parse(factsJSON);
 
 //queries of form {"flute": {"minPitch": 50, "maxPitch": 80}};
 module.exports = (query) => //ex: invoked w searchFacts(query)
@@ -12,13 +12,12 @@ module.exports = (query) => //ex: invoked w searchFacts(query)
   if (query["composer"] === "lucky")
   {
     //get # between 0 and factsMap.length - 1
-    const r = Math.floor(Math.random() * (factsMap.size));
-    const keys = factsMap.keys();
+    const r = Math.floor(Math.random() * (factsDB.length));
     let randomScore = "";  
 
     for (let i = 0; i < r; i++)
     {
-      randomScore = keys.next().value;
+      randomScore = Object.keys(factsDB[r])[0];
     } 
     
     return randomScore;
@@ -48,21 +47,23 @@ module.exports = (query) => //ex: invoked w searchFacts(query)
   }
 
   const queryInstrumentNames = Object.keys(query);
-  
+ 
   //iterate over pieces in our facts database
   //................value, key
-  factsMap.forEach((pieceFacts, pieceName) =>
-  {
+  factsDB.forEach((scoreFacts) =>
+  { 
+    const scoreName = Object.keys(scoreFacts)[0];
+    const facts = scoreFacts[scoreName];
     
     //check if our piece is by the composer they want
-    if (queryComposer && !pieceName.toLowerCase().includes(queryComposer))
+    if (queryComposer && !scoreName.toLowerCase().includes(queryComposer))
     {
       return false;
     }
     //check if our piece has a tempo range they want
     if (queryTempo)
     {
-      for (let tempo of pieceFacts["tempos"])
+      for (let tempo of facts["tempos"])
       {
         if (tempo < queryTempo["minPitch"] || tempo > queryTempo["maxPitch"])
         {
@@ -73,7 +74,7 @@ module.exports = (query) => //ex: invoked w searchFacts(query)
     
     //check if our piece has the key they want
     //indexOf returns -1 if doesn't exist
-    if (queryKey && pieceFacts["keySignatures"].indexOf(queryKey) === -1)
+    if (queryKey && facts["keySignatures"].indexOf(queryKey) === -1)
     {
       return false;
     }
@@ -81,7 +82,7 @@ module.exports = (query) => //ex: invoked w searchFacts(query)
     //see if piece has query instruments and if they're in range
     //to do so we need to check substrings, 
     //so "trumpet in C" passes for query "trumpet"
-    const pieceInstrumentNames = Object.keys(pieceFacts["instrumentRanges"]);
+    const pieceInstrumentNames = Object.keys(facts["instrumentRanges"]);
      
     for (let queryInstrumentName of queryInstrumentNames)
     {
@@ -101,9 +102,9 @@ module.exports = (query) => //ex: invoked w searchFacts(query)
        }
        
        const minPitch = 
-        pieceFacts["instrumentRanges"][equivalentInstrumentName]["minPitch"];
+        facts["instrumentRanges"][equivalentInstrumentName]["minPitch"];
        const maxPitch = 
-        pieceFacts["instrumentRanges"][equivalentInstrumentName]["maxPitch"];
+        facts["instrumentRanges"][equivalentInstrumentName]["maxPitch"];
        const queryMinPitch = query[queryInstrumentName]["minPitch"];
        const queryMaxPitch = query[queryInstrumentName]["maxPitch"];
 
@@ -113,8 +114,7 @@ module.exports = (query) => //ex: invoked w searchFacts(query)
        }          	
     }
     
-    matchingPieces.push(pieceName); //if it made it this far it passes!
-
+    matchingPieces.push(scoreName); //if it made it this far it passes!
   });
   
   console.timeEnd("Took");

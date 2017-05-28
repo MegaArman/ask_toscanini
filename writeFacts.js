@@ -1,3 +1,4 @@
+console.time("Took");
 const fs = require("fs");
 const computeFacts = require("./computeFacts.js");
 
@@ -16,3 +17,4 @@ scoreNames.forEach((scoreName) =>
 });
 
 fs.writeFileSync(factsFile, JSON.stringify(factsDB));
+console.timeEnd("Took");
