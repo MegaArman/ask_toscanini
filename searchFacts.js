@@ -23,8 +23,6 @@ module.exports = (query) => //ex: invoked w searchFacts(query)
     return randomScore;
   }
     
-  const matchingPieces = [];
-  
   let queryComposer;
   if ("composer" in query)
   {
@@ -50,7 +48,7 @@ module.exports = (query) => //ex: invoked w searchFacts(query)
  
   //iterate over pieces in our facts database
   //................value, key
-  factsDB.forEach((scoreFacts) =>
+  const matchingScores = factsDB.map((scoreFacts) =>
   { 
     const scoreName = Object.keys(scoreFacts)[0];
     const facts = scoreFacts[scoreName];
@@ -60,16 +58,17 @@ module.exports = (query) => //ex: invoked w searchFacts(query)
     {
       return false;
     }
+
     //check if our piece has a tempo range they want
     if (queryTempo)
     {
-      for (let tempo of facts["tempos"])
+      const temposInRange = facts["tempos"].every(tempo =>
+        (tempo >= queryTempo["minPitch"] || tempo <= queryTempo["maxPitch"]));
+     
+      if (!temposInRange)
       {
-        if (tempo < queryTempo["minPitch"] || tempo > queryTempo["maxPitch"])
-        {
-          return false;
-        }
-      }
+        return false;
+      } 
     }
     
     //check if our piece has the key they want
@@ -82,42 +81,43 @@ module.exports = (query) => //ex: invoked w searchFacts(query)
     //see if piece has query instruments and if they're in range
     //to do so we need to check substrings, 
     //so "trumpet in C" passes for query "trumpet"
-    const pieceInstrumentNames = Object.keys(facts["instrumentRanges"]);
+    const scoreInstrumentNames = Object.keys(facts["instrumentRanges"]);
      
-    for (let queryInstrumentName of queryInstrumentNames)
+    const allInstrumentsPass = queryInstrumentNames
+    .every((queryInstrumentName) =>
     {
-      let equivalentInstrumentName;
-  
-      for (let pieceInstrumentName of pieceInstrumentNames)
-      {
-        if (pieceInstrumentName.includes(queryInstrumentName))
-        {
-           equivalentInstrumentName = pieceInstrumentName;
-        }
-      }
-      
-       if (equivalentInstrumentName === undefined)
-       {
-          return false;
-       }
-       
-       const minPitch = 
-        facts["instrumentRanges"][equivalentInstrumentName]["minPitch"];
-       const maxPitch = 
-        facts["instrumentRanges"][equivalentInstrumentName]["maxPitch"];
-       const queryMinPitch = query[queryInstrumentName]["minPitch"];
-       const queryMaxPitch = query[queryInstrumentName]["maxPitch"];
+      const equivalentInstrumentName = scoreInstrumentNames
+      .find((scoreInstrumentName) => 
+             scoreInstrumentName.includes(queryInstrumentName));
 
-       if (minPitch < queryMinPitch || maxPitch > queryMaxPitch)
-       {
-         return false;
-       }          	
+      if (equivalentInstrumentName === undefined)
+      {
+        return false;
+      }
+
+      const minPitch = 
+        facts["instrumentRanges"][equivalentInstrumentName]["minPitch"];
+      const maxPitch = 
+        facts["instrumentRanges"][equivalentInstrumentName]["maxPitch"];
+      const queryMinPitch = query[queryInstrumentName]["minPitch"];
+      const queryMaxPitch = query[queryInstrumentName]["maxPitch"];
+
+      if (minPitch < queryMinPitch || maxPitch > queryMaxPitch)
+      {
+       return false;
+      }        
+
+      return true;
+    });
+
+    if (!allInstrumentsPass)
+    {
+      return false;
     }
-    
-    matchingPieces.push(scoreName); //if it made it this far it passes!
+
+    return scoreName;
   });
   
-  console.timeEnd("Took");
- return matchingPieces;
+ console.timeEnd("Took");
+ return matchingScores;
 };
-
