@@ -1,7 +1,7 @@
 const http = require("http");
 const fs = require("fs");
 const searchFacts = require("./searchFacts");
-const createQueryObject = require("./createQueryObject");
+const parseQueryString = require("./parseQueryString");
 const port = 7999;
 const pdfDir = "/pdf_scores/";
 const musicxmlDir = "/musicxml_scores/";
@@ -94,7 +94,7 @@ function onRequest(request, response)
       console.log("requestBody", requestBody);
       response.writeHead(200, {"Content-Type": "text/plain"}); 
       const queryString = requestBody; 
-      const queryObject = createQueryObject(queryString);
+      const queryObject = parseQueryString(queryString);
 
       //error string
       if (typeof queryObject === "string")
