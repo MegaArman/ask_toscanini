@@ -53,7 +53,7 @@ module.exports = (query) => //ex: invoked w searchFacts(query)
 
     const hasTempoRange = queryTempo === undefined || 
       facts["tempos"].every(tempo => 
-        tempo >= queryTempo["minPitch"] && tempo <= queryTempo["maxPitch"]);  
+        tempo >= queryTempo["min"] && tempo <= queryTempo["max"]);  
     
     const hasKey = queryKey === undefined ||
       facts["keySignatures"].indexOf(queryKey) !== -1;

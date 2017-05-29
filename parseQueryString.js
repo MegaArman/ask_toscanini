@@ -4,10 +4,6 @@
 //from a string like "flute 50 80 and viola 40 74"
 //if the query string is invalid, a string containing "ERROR" 
 //will be returned
-function ascii(c)
-{
-  return c.charCodeAt(0);
-}
 
 const noteToMIDI = 
 {
@@ -63,8 +59,7 @@ function noteOctaveToMIDI(noteOctave)
     octave = parseInt(noteOctave.charAt(1));
   }
 
-  const MIDI = pitch + accidental + 12 * octave;
-  return MIDI;
+  return (pitch + accidental + 12 * octave);
 }
 
 module.exports = (queryString) =>
@@ -81,15 +76,13 @@ module.exports = (queryString) =>
 
   const validQuery = queryConditionMatrix.every((queryCondition) => 
   { 
-    let validQuery = true;
-
-    if (queryCondition[0] === "composer" && queryCondition.length === 2 && 
-        !("composer" in queryObject))
+    if (queryCondition.length === 1 && !("composer" in queryObject))
     {
-      queryObject["composer"] = queryCondition[1];
+      queryObject["composer"] = queryCondition[0];
     }
     else if (queryCondition[0] === "tempo" && queryCondition.length === 3 && 
-             !("tempo" in queryObject))
+             !("tempo" in queryObject) &&
+             (parseInt(queryCondition[1]) < parseInt(queryCondition[2])))
     {
       queryObject["tempo"] = {}; 
       queryObject["tempo"]["min"] = parseInt(queryCondition[1]);
@@ -100,21 +93,26 @@ module.exports = (queryString) =>
     {
       queryObject["key"] = queryCondition[0];
     }
+    //an instrument, ex: flute G3 D6
+    else if (!(queryCondition[0] in queryObject) &&
+              queryCondition.length === 3 && 
+              (noteOctaveToMIDI(queryCondition[1])
+                < noteOctaveToMIDI(queryCondition[2])))
+    {
+      queryObject[queryCondition[0]] = {};
+      queryObject[queryCondition[0]]["minPitch"] = 
+        noteOctaveToMIDI(queryCondition[1]);
+      queryObject[queryCondition[0]]["maxPitch"] = 
+        noteOctaveToMIDI(queryCondition[2]);
+    }
     else
     {
-      errorString = queryCondition[0];
-      return validQuery = false;
+      errorString = queryCondition.join(" ");
+      return false;
     }
-    return validQuery;
+    return true;
   });
- 
-  if (validQuery)
-  { 
-    return queryObject;
-  }
-  else
-  {
-    return "ERROR: " + errorString;
-  }
+
+  return (validQuery ? queryObject: "ERROR: " + errorString); 
 };
 
