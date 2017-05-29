@@ -12,14 +12,8 @@ module.exports = (query) => //ex: invoked w searchFacts(query)
   if (query["composer"] === "lucky")
   {
     //get # between 0 and factsMap.length - 1
-    const r = Math.floor(Math.random() * (factsDB.length));
-    let randomScore = "";  
-
-    for (let i = 0; i < r; i++)
-    {
-      randomScore = Object.keys(factsDB[r])[0];
-    } 
-    
+    const randomNum = Math.floor(Math.random() * (factsDB.length));
+    const randomScore = Object.keys(factsDB[randomNum]);   
     return randomScore;
   }
     
@@ -53,26 +47,24 @@ module.exports = (query) => //ex: invoked w searchFacts(query)
     const scoreName = Object.keys(scoreTuple)[0];
     const facts = scoreTuple[scoreName];
 
-    //console.log("queryStuff", [queryComposer, queryTempo, queryKey]);
     const hasComposer = queryComposer === undefined || 
-                        queryComposer.length === 0 ||
-                        scoreName.toLowerCase().includes(queryComposer);
+      queryComposer.length === 0 ||
+      scoreName.toLowerCase().includes(queryComposer);
 
-    const hasTempoRange = queryTempo === undefined ||
-                           facts["tempos"]
-                          .every(tempo => tempo >= queryTempo["minPitch"] 
-                                 || tempo <= queryTempo["maxPitch"]);  
+    const hasTempoRange = queryTempo === undefined || 
+      facts["tempos"].every(tempo => 
+        tempo >= queryTempo["minPitch"] && tempo <= queryTempo["maxPitch"]);  
     
     const hasKey = queryKey === undefined ||
-                   facts["keySignatures"].indexOf(queryKey) !== -1;
+      facts["keySignatures"].indexOf(queryKey) !== -1;
     
     const scoreInstrumentNames = Object.keys(facts["instrumentRanges"]);
     const allInstrumentsPass = queryInstrumentNames
       .every((queryInstrumentName) =>
       {
         const equivalentInstrumentName = scoreInstrumentNames
-        .find((scoreInstrumentName) => 
-               scoreInstrumentName.includes(queryInstrumentName));
+          .find((scoreInstrumentName) =>
+           scoreInstrumentName.includes(queryInstrumentName));
 
         if (equivalentInstrumentName === undefined)
         {
@@ -86,7 +78,7 @@ module.exports = (query) => //ex: invoked w searchFacts(query)
         const queryMinPitch = query[queryInstrumentName]["minPitch"];
         const queryMaxPitch = query[queryInstrumentName]["maxPitch"];
 
-        return (minPitch >= queryMinPitch || maxPitch <= queryMaxPitch);
+        return (minPitch >= queryMinPitch && maxPitch <= queryMaxPitch);
       });
    
     return (hasComposer && hasTempoRange && hasKey && allInstrumentsPass) ?
