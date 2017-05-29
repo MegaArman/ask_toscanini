@@ -67,108 +67,45 @@ function noteOctaveToMIDI(noteOctave)
   return MIDI;
 }
 
-module.exports = (searchString) =>
+module.exports = (queryString) =>
 {
   const queryObject = {};
   let errorString = "bad query";
 
   //take the input string, flute 34 70 and guitar 30 90 and output
   //=>[ [ 'flute', '34', '70' ], [ 'guitar', '30', '90' ] ]
-  const inputMatrix = searchString.split("and").map((query) =>
+  const queryConditionMatrix = queryString.split("and").map((queryPartString) =>
     //remove duplicate spaces and split
-    (query.toLowerCase().replace(/\s+/g, " ").trim().split(" "))
+    queryPartString.toLowerCase().replace(/\s+/g, " ").trim().split(" ")
   );
 
-  const validQuery = inputMatrix.every((queryPart) => 
+  const validQuery = queryConditionMatrix.every((queryCondition) => 
   { 
-    if (queryPart.length === 1)
-    {
-      if ("composer" in queryObject) //there's already a composer
-      {
-        if (queryPart[0].length !== 0)
-        {
-         errorString = 
-            queryPart[0] + 
-            "- we only support querying for " + 
-            "one composer at this time, please fix";
-        }
-        else
-        {
-          errorString = "and must be followed by a query";
-        }
-        return false;
-      } 
-      
-      queryObject["composer"] = queryPart[0];    
-      return true;
-    } //query length 1
+    let validQuery = true;
 
-    //key signature
-    if (queryPart.length === 2 && queryPart[0] === "key")
+    if (queryCondition[0] === "composer" && queryCondition.length === 2 && 
+        !("composer" in queryObject))
     {
-      if ("key" in queryObject)
-      {
-        errorString = "key criteria already exists, please fix";
-        return false;
-      }
-     
-      const keyWithoutAccidental = queryPart[1].charAt(0).toUpperCase();
-      queryObject["key"] = (queryPart[1].length === 2) ? 
-      keyWithoutAccidental + queryPart[1].charAt(1) : keyWithoutAccidental;
-
-      return true;
+      queryObject["composer"] = queryCondition[1];
     }
-
-    if (queryPart.length !== 3)
+    else if (queryCondition[0] === "tempo" && queryCondition.length === 3 && 
+             !("tempo" in queryObject))
     {
-      errorString = ("query starting with " + queryPart[0] +
-                     " is not of appropriate length- see instructions");
-      return false;
+      queryObject["tempo"] = {}; 
+      queryObject["tempo"]["min"] = parseInt(queryCondition[1]);
+      queryObject["tempo"]["max"] = parseInt(queryCondition[2]);
     }
-
-    //Store instrument name
-    const instrumentName = queryPart[0];
-
-    //Check if they use note octave notation, ex: C2 or midi nums, ex: 24
-    const firstASCIICharMinPitch = ascii(queryPart[1].toUpperCase().charAt(0));
-    const firstASCIICharMaxPitch = ascii(queryPart[2].toUpperCase().charAt(0));
-    let maxPitch;
-    let minPitch;
-
-    if (firstASCIICharMinPitch >= 65 && firstASCIICharMinPitch <= 71)
+    else if (queryCondition[0] === "key" && queryCondition.length === 2 &&
+             !("key" in queryObject))
     {
-      minPitch = noteOctaveToMIDI(queryPart[1]);
+      queryObject["key"] = queryCondition[0];
     }
     else
     {
-      minPitch = parseInt(queryPart[1]);
+      errorString = queryCondition[0];
+      return validQuery = false;
     }
-
-    if (firstASCIICharMaxPitch >= 65 && firstASCIICharMaxPitch <= 71)
-    {
-      maxPitch = noteOctaveToMIDI(queryPart[2]);
-    } 
-    else
-    {
-     maxPitch = parseInt(queryPart[2]);
-    }
-
-    if (instrumentName in queryObject)
-    { 
-      errorString = (instrumentName + " already has a range criteria");
-      return false;
-    }
-
-    if (minPitch > maxPitch)
-    {
-      errorString = (queryPart[0] + 
-        " -minimum should not be greater than maximum, please fix!"); 
-      return false;
-    }
-
-    //perform the insertion
-    queryObject[instrumentName] = {"minPitch": minPitch, "maxPitch": maxPitch};
-    return true;
+    return validQuery;
   });
  
   if (validQuery)
