@@ -48,76 +48,51 @@ module.exports = (query) => //ex: invoked w searchFacts(query)
  
   //iterate over pieces in our facts database
   //................value, key
-  const matchingScores = factsDB.map((scoreFacts) =>
+  const matchingScores = factsDB.reduce((acc, scoreTuple) =>
   { 
-    const scoreName = Object.keys(scoreFacts)[0];
-    const facts = scoreFacts[scoreName];
-    
-    //check if our piece is by the composer they want
-    if (queryComposer && !scoreName.toLowerCase().includes(queryComposer))
-    {
-      return false;
-    }
+    const scoreName = Object.keys(scoreTuple)[0];
+    const facts = scoreTuple[scoreName];
 
-    //check if our piece has a tempo range they want
-    if (queryTempo)
-    {
-      const temposInRange = facts["tempos"].every(tempo =>
-        (tempo >= queryTempo["minPitch"] || tempo <= queryTempo["maxPitch"]));
-     
-      if (!temposInRange)
-      {
-        return false;
-      } 
-    }
-    
-    //check if our piece has the key they want
-    //indexOf returns -1 if doesn't exist
-    if (queryKey && facts["keySignatures"].indexOf(queryKey) === -1)
-    {
-      return false;
-    }
+    //console.log("queryStuff", [queryComposer, queryTempo, queryKey]);
+    const hasComposer = queryComposer === undefined || 
+                        queryComposer.length === 0 ||
+                        scoreName.toLowerCase().includes(queryComposer);
 
-    //see if piece has query instruments and if they're in range
-    //to do so we need to check substrings, 
-    //so "trumpet in C" passes for query "trumpet"
+    const hasTempoRange = queryTempo === undefined ||
+                           facts["tempos"]
+                          .every(tempo => tempo >= queryTempo["minPitch"] 
+                                 || tempo <= queryTempo["maxPitch"]);  
+    
+    const hasKey = queryKey === undefined ||
+                   facts["keySignatures"].indexOf(queryKey) !== -1;
+    
     const scoreInstrumentNames = Object.keys(facts["instrumentRanges"]);
-     
     const allInstrumentsPass = queryInstrumentNames
-    .every((queryInstrumentName) =>
-    {
-      const equivalentInstrumentName = scoreInstrumentNames
-      .find((scoreInstrumentName) => 
-             scoreInstrumentName.includes(queryInstrumentName));
-
-      if (equivalentInstrumentName === undefined)
+      .every((queryInstrumentName) =>
       {
-        return false;
-      }
+        const equivalentInstrumentName = scoreInstrumentNames
+        .find((scoreInstrumentName) => 
+               scoreInstrumentName.includes(queryInstrumentName));
 
-      const minPitch = 
-        facts["instrumentRanges"][equivalentInstrumentName]["minPitch"];
-      const maxPitch = 
-        facts["instrumentRanges"][equivalentInstrumentName]["maxPitch"];
-      const queryMinPitch = query[queryInstrumentName]["minPitch"];
-      const queryMaxPitch = query[queryInstrumentName]["maxPitch"];
+        if (equivalentInstrumentName === undefined)
+        {
+          return false;
+        }
 
-      if (minPitch < queryMinPitch || maxPitch > queryMaxPitch)
-      {
-       return false;
-      }        
+        const minPitch = 
+          facts["instrumentRanges"][equivalentInstrumentName]["minPitch"];
+        const maxPitch = 
+          facts["instrumentRanges"][equivalentInstrumentName]["maxPitch"];
+        const queryMinPitch = query[queryInstrumentName]["minPitch"];
+        const queryMaxPitch = query[queryInstrumentName]["maxPitch"];
 
-      return true;
-    });
-
-    if (!allInstrumentsPass)
-    {
-      return false;
-    }
-
-    return scoreName;
-  });
-  
+        return (minPitch >= queryMinPitch || maxPitch <= queryMaxPitch);
+      });
+   
+    return (hasComposer && hasTempoRange && hasKey && allInstrumentsPass) ?
+      acc.concat(scoreName): acc; 
+  }, []);
+ 
  console.timeEnd("Took");
  return matchingScores;
 };
