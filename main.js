@@ -67,10 +67,9 @@ $("#lucky").on("click", () =>
       $("#query").text("");
 
       let scoreName = JSON.parse(scoresJSON);
-
       if($("#test1").is(":checked"))
       {
-        scoreName = scoreName.replace(".xml", ".pdf");
+        scoreName = scoreName[0].replace(".xml", ".pdf");
       }
 
       $("#matchingScores").append(makeScoreDownloadLink(scoreName)); 

@@ -64,6 +64,11 @@ function noteOctaveToMIDI(noteOctave)
 
 module.exports = (queryString) =>
 {
+  if (queryString === "lucky")
+  {
+    return queryString;
+  }
+
   const queryObject = {};
   let errorString = "bad query";
 

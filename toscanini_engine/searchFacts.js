@@ -9,7 +9,7 @@ const factsDB = JSON.parse(factsJSON);
 module.exports = (query) => //ex: invoked w searchFacts(query)
 {
   console.time("Took");
-  if (query["composer"] === "lucky")
+  if (query === "lucky")
   {
     //get # between 0 and factsMap.length - 1
     const randomNum = Math.floor(Math.random() * (factsDB.length));

@@ -97,7 +97,7 @@ function onRequest(request, response)
       const queryObject = parseQueryString(queryString);
 
       //error string
-      if (typeof queryObject === "string")
+      if (queryObject.includes("ERROR"))
       {
         response.end(JSON.stringify(queryObject));
       }
