@@ -1,7 +1,7 @@
 const http = require("http");
 const fs = require("fs");
 const searchFacts = require("./toscanini_engine/searchFacts.js");
-const parseQueryString = require("./toscanini_engine/parseQueryString.js");
+const parseQueryString = require("./parseQueryString.js");
 const port = 7999;
 const pdfDir = "/pdf_scores/";
 const musicxmlDir = "/musicxml_scores/";
@@ -97,7 +97,7 @@ function onRequest(request, response)
       const queryObject = parseQueryString(queryString);
 
       //error string
-      if (queryObject.includes("ERROR"))
+      if (typeof queryObject === "string" && queryObject.includes("ERROR"))
       {
         response.end(JSON.stringify(queryObject));
       }
