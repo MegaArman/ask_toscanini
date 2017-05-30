@@ -96,7 +96,10 @@ module.exports = (queryString) =>
     else if (queryCondition[0] === "key" && queryCondition.length === 2 &&
              !("key" in queryObject))
     {
-      queryObject["key"] = queryCondition[0];
+      //checks for accidental
+      const note = queryCondition[1].charAt(0).toUpperCase();
+      const accidental = queryCondition[1].charAt(1);
+      queryObject["key"] = accidental !== undefined ? note + accidental: note;
     }
     //an instrument, ex: flute G3 D6
     else if (!(queryCondition[0] in queryObject) &&

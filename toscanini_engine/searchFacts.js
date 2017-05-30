@@ -56,7 +56,7 @@ module.exports = (query) => //ex: invoked w searchFacts(query)
         tempo >= queryTempo["min"] && tempo <= queryTempo["max"]);  
     
     const hasKey = queryKey === undefined ||
-      facts["keySignatures"].indexOf(queryKey) !== -1;
+      facts["keySignatures"].includes(queryKey);
     
     const scoreInstrumentNames = Object.keys(facts["instrumentRanges"]);
     const allInstrumentsPass = queryInstrumentNames
