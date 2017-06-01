@@ -10,54 +10,52 @@ const fifthToPitch =
 
 function traverse(obj,func)
 {
-  for (let i in obj)
+  Object.keys(obj).forEach((key) =>
   {
-    func.apply(this,[i, obj[i]]);
-    if (obj[i] !== null && typeof(obj[i])==="object")
+    func.apply(this,[key, obj[key]]);
+    if (obj[key] !== null && typeof(obj[key])==="object")
     {
-      traverse(obj[i],func);
+      traverse(obj[key],func);
     }
-  }
+  });
 }
 
 //create objects for each part, this will reduce searching whole score.
 //part being the full name of parts, ex: Solo Violin, Violin I, Violin II
 function makeInstrumentObjects(musicObj)
 {
-  let partNames = [];
-  let instrumentObjects = {};
-  let key;
-  let value;
+  const partNames = [];
+  const instrumentObjects = {};
 
   function searchForInstruments(obj)
   {
-    for (let i in obj)
+    Object.keys(obj).forEach((key) =>
     {
-      key = i;
-      value = obj[i];
+      const value = obj[key];
 
       if (key === "part-name") 
       {
         partNames.push(value);
       }
-//the actual parts data are in an ordered array found via key "part"
-//bc they"re ordered, they correspond to the ordering of the part-names
+      //the actual parts data are in an ordered array found via key "part"
+      //bc they"re ordered, they correspond to the ordering of the part-names
       else if (key === "part")
       {
         let index = 0;
-        for (let name of partNames)
+
+        partNames.forEach((name) =>
         {
           instrumentObjects[name] = value[index]; //value is array of parts
           index++;
-        }
+        });
 
         return; //avoid redundant traversal- VERY IMPORTANT
       }
-      else if (obj[i] !== null && typeof(obj[i])==="object")
+      else if (value !== null && typeof(value)==="object")
       { 
-       searchForInstruments(obj[i]);
+       searchForInstruments(value);
       }
-    }
+    });
   }
   searchForInstruments(musicObj);
 
@@ -73,7 +71,7 @@ function makeInstrumentObjects(musicObj)
 
 //=============================================================================
 //"class"
-const Toscanini = (musicObj) =>
+const createToscanini = (musicObj) =>
 {
   //"private" variables..note state is safest kept constant-------------------
   const toscanini = {};
@@ -146,13 +144,13 @@ const Toscanini = (musicObj) =>
         let newKeySig = fifthToPitch[value];
         let shouldPush = true;
 
-        for (let oldKeySig of keySignatures) //avoid duplicates
+        keySignatures.forEach((oldKeySignature) =>
         {
-          if (newKeySig === oldKeySig)
+          if (newKeySig === oldKeySignature)
           {
             shouldPush = false;
           }
-        }
+        });
 
         if (shouldPush)
         {
@@ -200,34 +198,33 @@ const Toscanini = (musicObj) =>
     }
     //---------------------------------------------------
 
-    for (let instrumentData in instrumentObjects)
+    Object.keys(instrumentObjects).forEach((instrumentName) =>
     {
-      traverse(instrumentObjects[instrumentData], process);
+      traverse(instrumentObjects[instrumentName], process);
 
       if (tempStrNotes.includes(melodyString))
       {
-        instrumentsWithMelody.push(instrumentData);
+        instrumentsWithMelody.push(instrumentName);
       }
       tempStrNotes = "";
-    }
+    });
 
     return instrumentsWithMelody;
   };
 
   toscanini.getTempos = () =>
   {
-    let tempos = [];
+    const tempos = [];
 
     function process(key,value)
     {
       if (key === "tempo")
       {
-        const tempo = parseInt(value);
-        const exists = tempos.some((oldTempo) => (oldTempo === tempo));
+        const newTempo = parseInt(value);
         
-        if (!exists) 
+        if (!tempos.includes(newTempo)) 
         {
-          tempos.push(parseInt(value));
+          tempos.push(newTempo);
         }
       }
     }
@@ -236,81 +233,51 @@ const Toscanini = (musicObj) =>
     return tempos;
   };
 
-  toscanini.getAccidentals = () =>
+  toscanini.getTimeSignatures = () =>
   {
-    //Sharps/flats for a given note
-    let currKey = {"C": 0, "D": 0, "E": 0, "F": 0, "G": 0, "A": 0, "B": 0};     
-    let accidentals = 0;
-    let currNote = "A";
-
-    function setKey(fifths)
+    const timeSignatures = []; //ex: [{beats: 5, beats-type: 2}, ...]
+    
+    function process(key,value)
     {
-      let keyArray = [0, 0, 0, 0, 0, 0, 0]; //[F, C, G, D, A, E, B]
-      if (fifths > 0)   //Sharps
+     if (key === "time")
+     {
+      const newTimeSignature = 
+        [parseInt(value["beats"]), parseInt(value["beat-type"])];
+ 
+      if (!timeSignatures.some((oldTimeSignature) => 
+            oldTimeSignature[0] === newTimeSignature[0]
+            && oldTimeSignature[1] === newTimeSignature[1])) 
       {
-        for (let i = 0; i < fifths; i++)
-        {
-          keyArray[i % 7]++;
-        }
-      }
-      else if (fifths < 0)   //Flats
-      {
-        for (let i = 0; i < (-fifths); i++)
-        {
-          keyArray[6 - (i % 7)]--;
-        }
-      }
-      currKey["F"] = keyArray[0];
-      currKey["C"] = keyArray[1];
-      currKey["G"] = keyArray[2];
-      currKey["D"] = keyArray[3];
-      currKey["A"] = keyArray[4];
-      currKey["E"] = keyArray[5];
-      currKey["B"] = keyArray[6];
-    }
-
-    function process(key, value)
-    {
-      if (key === "fifths") 
-      {
-        setKey(value);
-      }
-      else if (key === "step") 
-      {
-        currNote = value;
-      }
-      else if (key === "alter" && currKey[currNote] !== parseInt(value))
-      {
-        accidentals++;
-      }
+        timeSignatures.push(newTimeSignature);
+      } 
+     }
     }
 
     traverse(musicObj, process);
-    return accidentals;
+    return timeSignatures;
   };
 
   return toscanini;
-}; //Toscanini 
+}; //createToscanini 
 
+//======================================================================
 const xml2js = require("xml2js");
 const parser = new xml2js.Parser({explicitArray: false, mergeAttrs: true});
 
-// similar to a "constructor", converts musicxml to a javascript object
-// creates and returns a Toscanini instance
-module.exports = (musicxml) =>
+const constructor = (musicxml) =>
 {
-  let toscanini;
+  let scoreObj;
 
-  //musicObj is the resulting JS object. musicxml->musicObj
-  parser.parseString(musicxml, function (err, musicObj)
+  parser.parseString(musicxml, (err, obj) =>
   {
     if (err)
     {
       throw err;
     }
-    toscanini = Toscanini(musicObj);
+    scoreObj = obj;
   });
 
-  return toscanini;
+  return createToscanini(scoreObj);
 };
 
+module.exports = constructor; 

@@ -18,5 +18,7 @@ module.exports = (musicxml) =>
   facts["instrumentRanges"] = instrumentRanges;
   facts["tempos"] = toscanini.getTempos();
   facts["keySignatures"] = toscanini.getKeySignatures();
+  facts["timeSignatures"] = toscanini.getTimeSignatures();
+
   return facts;
 };
