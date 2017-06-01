@@ -9,6 +9,9 @@ const factsDB = JSON.parse(factsJSON);
 module.exports = (query) => //ex: invoked w searchFacts(query)
 {
   console.time("Took");
+
+  //extract info from query====================================
+  //TODO: this step should not be needed
   if (query === "lucky")
   {
     //get # between 0 and factsMap.length - 1
@@ -37,9 +40,16 @@ module.exports = (query) => //ex: invoked w searchFacts(query)
     queryKey = query["key"];
     delete query["key"];
   }
+  
+  let queryTimeSignature;
+  if ("timeSignature" in query)
+  {
+    queryTimeSignature = query["timeSignature"];
+    delete query["timeSignature"];
+  }
 
   const queryInstrumentNames = Object.keys(query);
- 
+  //==========================================================
   //iterate over pieces in our facts database
   //................value, key
   const matchingScores = factsDB.reduce((acc, scoreTuple) =>
@@ -57,9 +67,16 @@ module.exports = (query) => //ex: invoked w searchFacts(query)
     
     const hasKey = queryKey === undefined ||
       facts["keySignatures"].includes(queryKey);
-    
+
+    const hasTimeSignature = queryTimeSignature === undefined ||
+      facts["timeSignatures"].some((timeSignature) =>
+        (queryTimeSignature[0] === timeSignature[0] && 
+         queryTimeSignature[1] === timeSignature[1])
+      );
+
     const scoreInstrumentNames = Object.keys(facts["instrumentRanges"]);
-    const allInstrumentsPass = queryInstrumentNames
+    const allInstrumentsPass = queryInstrumentNames.length === 0 ||
+      queryInstrumentNames
       .every((queryInstrumentName) =>
       {
         const equivalentInstrumentName = scoreInstrumentNames
@@ -80,9 +97,9 @@ module.exports = (query) => //ex: invoked w searchFacts(query)
 
         return (minPitch >= queryMinPitch && maxPitch <= queryMaxPitch);
       });
-   
-    return (hasComposer && hasTempoRange && hasKey && allInstrumentsPass) ?
-      acc.concat(scoreName): acc; 
+
+    return (hasComposer && hasTempoRange && hasKey && hasTimeSignature && 
+             allInstrumentsPass) ? acc.concat(scoreName): acc; 
   }, []);
  
  console.timeEnd("Took");

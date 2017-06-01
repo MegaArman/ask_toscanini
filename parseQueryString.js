@@ -101,6 +101,12 @@ module.exports = (queryString) =>
       const accidental = queryCondition[1].charAt(1);
       queryObject["key"] = accidental !== undefined ? note + accidental: note;
     }
+    else if (queryCondition[0] === "ts" && queryCondition.length === 3 &&
+             !("timeSignature" in queryObject))
+    {
+      queryObject["timeSignature"] = [parseInt(queryCondition[1]),
+                                      parseInt(queryCondition[2])];
+    }
     //an instrument, ex: flute G3 D6
     else if (!(queryCondition[0] in queryObject) &&
               queryCondition.length === 3 && 
