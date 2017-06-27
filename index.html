@@ -4,178 +4,20 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="./materialize.css">
+    <link rel="stylesheet" type="text/css" href="styles.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Ask Toscanini!</title>
-    <style>
-      body
-      {
-        margin:64px;
-        font-size: medium;
-      }
-
-      ul, p
-      {
-        padding-left:4px !important;
-      }
-      
-      .btn 
-      {
-        background-color:#e63900 !important;
-        text-transform:none;
-        font-family:arial,sans-serif;
-        font-weight:bold;
-       }
-			
-      .download
-      {
-       color: #0366d6 !important;
-      }
-
-      .logo 
-      {
-        display: block;
-        width: 100%;
-      }
-
-      #ask:hover, #lucky:hover
-      {
-        background-color:#ff4000 !important;
-      }	
-
-      #ask 
-      {
-        margin-bottom: 20px; 
-      }
-      
-      #lucky 
-      {
-        margin-bottom: 20px;
-      }
-      
-      #inputField
-      {
-        color:black;
-      }
-		  
-      #matchingScores 
-      {
-        margin-top: 32px;
-      }
-      
-      #nav 
-      {
-        background-color:white;
-        margin-top:32px; 
-        margin-bottom:16px;
-       }
-     
-      #nav-wrapper 
-      {
-       background-color:white
-      }
-     
-      #resultsHeader 
-      {
-       padding: 10px 20px;
-      }
-       
-      #query
-      {
-       font-style: italic;
-      }
-
-      #search
-      {
-        padding-left:2rem;
-        background-color:white;
-      }
-
-      #test2label 
-      {
-        margin-left:50px;
-      }
-
-      #radioButtons 
-      {
-        margin-bottom: 32px;
-      }
-
-      @media only screen and (min-width: 663px)
-      {
-        /* tablets and desktop */
-        body 
-        {
-          font-size: large;
-        }
-
-        .logo
-        {
-          margin-left: auto;
-          margin-right: auto;
-        }
-
-        #lucky
-        {
-          margin-left: 12px;
-        }
-      }
-      
-      @media only screen and (min-width: 900px)
-      {
-        /* Large devices */
-        .logo 
-        {
-          width: 66%;
-        }  
-      }
-
-       @media only screen and (min-width: 1200px)
-      {
-        /* Large devices */
-        .logo 
-        {
-          width: 40%;
-        }  
-      }
-
-    </style>
   </head>
 
-
   <body>
-    <img class="logo" src="https://raw.githubusercontent.com/MegaArman/Ask_Toscanini/master/Ask_Toscanini!.png"
-      alt="Toscanini Search Engine">
- 
-    <h4>Quickstart</h4>
-    <p>Suppose you want pieces with flute that plays in range D4 G#6 and viola in C3 E5...</p>
-
-    <ol>
-      <li>Enter an instrument range query in the search box below as "flute D4 G#6 and viola C3 E5"
-      (without quotes)</li>
-      <li>Hit the "Toscanini Search" button and
-            we'll show you our matching scores as PDF or
-        <a href="https://en.wikipedia.org/wiki/MusicXML" target="_blank"> MusicXML </a>
-        !
-      </li>
-    </ol>
-    <h5>Supported Queries</h5> 
-    <ul>
-      <li>-See all scores we have by leaving the search box empty</li>
-      <li>-Query for a single composer, ex: "bach"</li>
-      <li>-Query for tempo between range, ex: "tempo 40 130", however
-          if a piece has no written tempo it will pass for any tempo</li>
-      <li>-Query for a single key signature, ex: "key Bb"</li>
-      <li>-Query for a single time signature, ex: "ts 2 4"</li>
-      <li>-Putting it all together: "Beethoven and tempo 80 170 and 
-      flute D4 G#6  and trumpet F#3 A5 and key Bb and ts 2 4"</li>
-    </ul>
-    <h5>Side Notes</h5>
-    <ul>
-      <li>-This engine is not case sensitive</li>
-      <li>-Queries are checked for name inclusion, 
-      so querying for "trumpet F3 D5" can give you scores with 
-      "Trumpets in C" assuming the range is appropriate</li>
-    </ul>
+    <div id="header">
+      <img class="logo" src="https://raw.githubusercontent.com/MegaArman/Ask_Toscanini/master/Ask_Toscanini!.png"
+        alt="Ask Toscanini!">
+      <a href="/instructions"> 
+        <i class="medium material-icons">info_outline</i> 
+      </a>
+    </div>
+     
     <nav id="nav">
       <div class="nav-wrapper">
         <form onSubmit="return false;">

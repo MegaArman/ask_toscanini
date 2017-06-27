@@ -1,0 +1,137 @@
+body
+{
+  margin:64px;
+  font-size: medium;
+}
+
+ul, p
+{
+  padding-left:4px !important;
+}
+
+.btn 
+{
+  background-color:#e63900 !important;
+  text-transform:none;
+  font-family:arial,sans-serif;
+  font-weight:bold;
+ }
+                  
+.download
+{
+ color: #0366d6 !important;
+}
+
+.logo 
+{
+  display: block;
+  width: 100%;
+}
+
+#ask:hover, #lucky:hover
+{
+  background-color:#ff4000 !important;
+}	
+
+#ask 
+{
+  margin-bottom: 20px; 
+}
+
+#lucky 
+{
+  margin-bottom: 20px;
+}
+
+#header
+{
+  display: flex;
+}
+
+#inputField
+{
+  color:black;
+}
+            
+#matchingScores 
+{
+  margin-top: 32px;
+}
+
+#nav 
+{
+  background-color:white;
+  margin-top:32px; 
+  margin-bottom:16px;
+ }
+
+#nav-wrapper 
+{
+ background-color:white
+}
+
+#resultsHeader 
+{
+ padding: 10px 20px;
+}
+ 
+#query
+{
+ font-style: italic;
+}
+
+#search
+{
+  padding-left:2rem;
+  background-color:white;
+}
+
+#test2label 
+{
+  margin-left:50px;
+}
+
+#radioButtons 
+{
+  margin-bottom: 32px;
+}
+
+@media only screen and (min-width: 663px)
+{
+  /* tablets and desktop */
+  body 
+  {
+    font-size: large;
+  }
+
+  .logo
+  {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  #lucky
+  {
+    margin-left: 12px;
+  }
+}
+
+@media only screen and (min-width: 900px)
+{
+  /* Large devices */
+  .logo 
+  {
+    width: 66%;
+  }  
+}
+
+ @media only screen and (min-width: 1200px)
+{
+  /* Large devices */
+  .logo 
+  {
+    width: 40%;
+  }  
+}
+
+
