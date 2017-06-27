@@ -43,9 +43,11 @@ ul, p
   margin-bottom: 20px;
 }
 
-#header
+#navButton
 {
-  display: flex;
+  position: absolute;
+  top: 8px;
+  right: 8px;
 }
 
 #inputField
@@ -115,7 +117,7 @@ ul, p
     margin-left: 12px;
   }
 }
-
+ 
 @media only screen and (min-width: 900px)
 {
   /* Large devices */
@@ -123,11 +125,17 @@ ul, p
   {
     width: 66%;
   }  
+
+  #navButton
+  {
+    top: 32px;
+    right: 32px;
+  }
 }
 
  @media only screen and (min-width: 1200px)
 {
-  /* Large devices */
+  /* Very Large devices */
   .logo 
   {
     width: 40%;
