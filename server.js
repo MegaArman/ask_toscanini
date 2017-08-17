@@ -1,7 +1,8 @@
 const http = require("http");
 const fs = require("fs");
-const searchFacts = require("./toscanini_engine/searchFacts.js");
-const parseQueryString = require("./parseQueryString.js");
+const searchFacts = require("./toscanini_backend_engine/searchFacts.js");
+const parseQueryString = 
+  require("./toscanini_backend_engine/parseQueryString.js");
 const port = 7999;
 const pdfDir = "/pdf_scores/";
 const musicxmlDir = "/musicxml_scores/";

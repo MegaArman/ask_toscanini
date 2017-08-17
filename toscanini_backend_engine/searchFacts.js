@@ -2,7 +2,8 @@
 //by writeFacts
 "use strict";
 const fs = require("fs");
-const factsJSON = fs.readFileSync("./facts.json");
+const path = require("path");
+const factsJSON = fs.readFileSync(path.resolve(__dirname,"./facts.json"));
 const factsDB = JSON.parse(factsJSON);
 
 //queries of form {"flute": {"minPitch": 50, "maxPitch": 80}};
