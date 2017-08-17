@@ -20,27 +20,27 @@ function onRequest(request, response)
     if (request.url === "/")
     {
       response.writeHead(200, {"Content-Type": "text/html"});
-      fs.createReadStream("./index.html").pipe(response);
+      fs.createReadStream("./frontend/index.html").pipe(response);
     }
     else if (request.url === "/info")
     {
       response.writeHead(200, {"Content-Type": "text/html"});
-      fs.createReadStream("./info.html").pipe(response);
+      fs.createReadStream("./frontend/info.html").pipe(response);
     }
     else if (request.url ==="/materialize.css")
     {
       response.writeHead(200, {"Content-Type": "text/css"});
-      fs.createReadStream("./materialize.css").pipe(response);
+      fs.createReadStream("./frontend/materialize.css").pipe(response);
     }
     else if (request.url ==="/styles.css")
     {
       response.writeHead(200, {"Content-Type": "text/css"});
-      fs.createReadStream("./styles.css").pipe(response);
+      fs.createReadStream("./frontend/styles.css").pipe(response);
     }
     else if (request.url === "/main.js")
     {
       response.writeHead(200, {"Content-Type": "text/javascript"});
-      fs.createReadStream("./main.js").pipe(response);
+      fs.createReadStream("./frontend/main.js").pipe(response);
     }
     else if (request.url.includes(musicxmlDir)
              && request.url.includes(".xml"))
