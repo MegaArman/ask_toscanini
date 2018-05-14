@@ -13,12 +13,10 @@ const dbName = "askToscanini";
 const factsPath = "./backend_engine/facts.json";
 const factsJSON = fs.readFileSync(path.resolve(__dirname, factsPath));
 const factsObj = JSON.parse(factsJSON);
-
 const insertDocuments = function(db, callback) 
 {
   // Get the documents collection
   const collection = db.collection("scoreFacts");
-
 
   // Insert some documents
   collection.insertMany(factsObj, function(err, result) 
