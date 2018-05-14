@@ -13,7 +13,7 @@ scoreNames.forEach((scoreName) =>
   console.log(scoreDir + scoreName + "...");
   const musicxml = fs.readFileSync(scoreDir + scoreName);
   const scoreFacts = computeFacts(musicxml);
-  scoreFacts["scoreName"] = scoreName;
+  scoreFacts["_id"] = scoreName;
   factsDB.push(scoreFacts);
 });
 
