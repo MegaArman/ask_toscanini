@@ -15,6 +15,7 @@
     "test": "tape *.spec.js | faucet"
   },
   "dependencies": {
+    "concertmaster": "^0.2.2",
     "forever": "^0.15.3",
     "mongodb": "^3.1.0-beta4",
     "toscanini": "^2.0.0",
