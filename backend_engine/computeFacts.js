@@ -1,6 +1,6 @@
 //writeFacts will extract and write facts of a score to a file
 //takes a directory to read from and filename to write to
-const Toscanini = require("./Toscanini.js");
+const Toscanini = require("toscanini");
 
 module.exports = (musicxml) =>
 {
