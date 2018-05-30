@@ -10,7 +10,7 @@ const url = "mongodb://localhost:27017";
 const dbName = "askToscanini";
 
 //make db from facts.json
-const factsPath = "./backend_engine/facts.json";
+const factsPath = "./facts.json";
 const factsJSON = fs.readFileSync(path.resolve(__dirname, factsPath));
 const factsObj = JSON.parse(factsJSON);
 const insertDocuments = function(db, callback) 

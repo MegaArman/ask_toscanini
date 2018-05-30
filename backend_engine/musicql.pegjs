@@ -44,11 +44,11 @@ musicTerm = "ts"_ beats:([1-9][0-9]?) _ beatType:([1-9][0-9]?)
 / "tempo" _ min:([0-9][0-9]?[0-9]?) _ max:([1-9][0-9]?[0-9]?)
 {
 	const minTempo = parseInt(min.join("", 10));
-    const maxTempo = parseInt(max.join("", 10));
+        const maxTempo = parseInt(max.join("", 10));
     
 	if (minTempo < maxTempo)
     {
-    	queryObj.$and.push({"minTempo": minTempo}, {"maxTempo": maxTempo});
+    	queryObj.$and.push({"minTempo": {$gte: minTempo}}, {"maxTempo": {$lte: maxTempo}});
     }
 }
 / "key" _ key:([a-gA-G][b|#]?)

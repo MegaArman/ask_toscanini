@@ -181,11 +181,11 @@ function peg$parse(input, options) {
       peg$c19 = peg$literalExpectation("tempo", false),
       peg$c20 = function(min, max) {
       	const minTempo = parseInt(min.join("", 10));
-          const maxTempo = parseInt(max.join("", 10));
+              const maxTempo = parseInt(max.join("", 10));
           
       	if (minTempo < maxTempo)
           {
-          	queryObj.$and.push({"minTempo": minTempo}, {"maxTempo": maxTempo});
+          	queryObj.$and.push({"minTempo": {$gte: minTempo}}, {"maxTempo": {$lte: maxTempo}});
           }
       },
       peg$c21 = "key",
