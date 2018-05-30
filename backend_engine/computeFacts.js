@@ -7,12 +7,13 @@ module.exports = (musicxml) =>
   const toscanini = Toscanini(musicxml);
   const instrumentNames = toscanini.getInstrumentNames(); //[]
   const facts = {};
-  const instrumentRanges = {};
+  const instrumentRanges = [];
   
   instrumentNames.forEach((instrumentName) => 
   {
-    let range = toscanini.getPitchRange(instrumentName);
-    instrumentRanges[instrumentName.toLowerCase()] = range;
+    const range = toscanini.getPitchRange(instrumentName);
+    range["instrumentName"] = instrumentName.toLowerCase();
+    instrumentRanges.push(range);
   });
 
   facts["instrumentRanges"] = instrumentRanges;
