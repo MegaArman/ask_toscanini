@@ -20,13 +20,13 @@ clause = (musicTerm / instrumentRange / composerInstrument)
 instrumentRange = instrument:([a-zA-Z0-9])+ _ min:([a-gA-G][b|#]?[0-9]) _ max:([a-gA-G][b|#]?[0-9])
 {
     const path = "instrumentRanges.";
-    const minPitchQuery = {};
-    const maxPitchQuery = {};
+    const rangeQuery = {};
     const minPitch = cm.noteStringToMidiNum(min.join("", 10));
     const maxPitch = cm.noteStringToMidiNum(max.join("", 10));
-    minPitchQuery[path+instrument.join("")+".minPitch"] = {$gte: minPitch};  
-    maxPitchQuery[path+instrument.join("")+".maxPitch"] = {$lte: maxPitch};
-    queryObj.$and.push(minPitchQuery, maxPitchQuery);    
+    rangeQuery[path + "instrumentName"] = {$regex: instrument.join("")};
+    rangeQuery[path + "minPitch"] = {$gte: minPitch};  
+    rangeQuery[path + "maxPitch"] = {$lte: maxPitch};
+    queryObj.$and.push(rangeQuery);    
 }
 
 composerInstrument = ci:([a-zA-Z0-9]+)

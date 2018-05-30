@@ -156,13 +156,13 @@ function peg$parse(input, options) {
       peg$c10 = peg$classExpectation([["0", "9"]], false, false),
       peg$c11 = function(instrument, min, max) {
           const path = "instrumentRanges.";
-          const minPitchQuery = {};
-          const maxPitchQuery = {};
+          const rangeQuery = {};
           const minPitch = cm.noteStringToMidiNum(min.join("", 10));
           const maxPitch = cm.noteStringToMidiNum(max.join("", 10));
-          minPitchQuery[path+instrument.join("")+".minPitch"] = {$gte: minPitch};  
-          maxPitchQuery[path+instrument.join("")+".maxPitch"] = {$lte: maxPitch};
-          queryObj.$and.push(minPitchQuery, maxPitchQuery);    
+          rangeQuery[path + "instrumentName"] = {$regex: instrument.join("")};
+          rangeQuery[path + "minPitch"] = {$gte: minPitch};  
+          rangeQuery[path + "maxPitch"] = {$lte: maxPitch};
+          queryObj.$and.push(rangeQuery);    
       },
       peg$c12 = function(ci) {
       	queryObj.$and.push({"_id": {$regex:ci.join("").toLowerCase()}});
