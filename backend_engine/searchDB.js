@@ -1,8 +1,6 @@
-console.time("took");
 const MongoClient = require("mongodb").MongoClient;
 const assert = require("assert");
 const MQL = require("./musicql.js");
-
 const url = "mongodb://localhost:27017";
 const dbName = "askToscanini";
 const collectionName = "scoreFacts";
@@ -33,8 +31,10 @@ const findDocuments = function(db, queryString, callback)
 
 
 // Use connect method to connect to the server
+//returns an array of scorenames
 module.exports = (queryString, cb) =>
 {
+  console.time("took");
   MongoClient.connect(url,function(err, client) 
   {
     assert.equal(null, err);
@@ -43,7 +43,8 @@ module.exports = (queryString, cb) =>
     const db = client.db(dbName);
     findDocuments(db, queryString, function(docs)
     {
-      cb(docs);
+      const scoreNames = docs.map(score => score._id);
+      cb(scoreNames);
       client.close();
       console.timeEnd("took");
     });

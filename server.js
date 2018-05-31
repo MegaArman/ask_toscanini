@@ -1,8 +1,6 @@
 const http = require("http");
 const fs = require("fs");
-const searchFacts = require("./toscanini_backend_engine/searchFacts.js");
-const parseQueryString = 
-  require("./toscanini_backend_engine/parseQueryString.js");
+const searchDB = require("./backend_engine/searchDB.js");
 const port = 7999;
 const pdfDir = "/pdf_scores/";
 const musicxmlDir = "/musicxml_scores/";
@@ -93,7 +91,7 @@ function onRequest(request, response)
     {
       requestBody += data;
 
-      if (requestBody.length > 1e3) //
+      if (requestBody.length > 256) //
       {
         response.writeHead(413, "Request Entity Too Large",
                                 {"Content-Type": "text/html"});
@@ -105,17 +103,23 @@ function onRequest(request, response)
       console.log("requestBody", requestBody);
       response.writeHead(200, {"Content-Type": "text/plain"}); 
       const queryString = requestBody; 
-      const queryObject = parseQueryString(queryString);
+      searchDB(queryString, function(scores)
+      {
+        console.log("got " + JSON.stringify(scores));
+        response.end(JSON.stringify(scores));
+      }); 
 
-      //error string
-      if (typeof queryObject === "string" && queryObject.includes("ERROR"))
-      {
-        response.end(JSON.stringify(queryObject));
-      }
-      else
-      {
-        response.end(JSON.stringify(searchFacts(queryObject)));
-      }
+      //const queryObject = parseQueryString(queryString);
+
+      ////error string
+      //if (typeof queryObject === "string" && queryObject.includes("ERROR"))
+      //{
+      //  response.end(JSON.stringify(queryObject));
+      //}
+      //else
+      //{
+      //  response.end(JSON.stringify(searchFacts(queryObject)));
+      //}
     });
   }
   else
