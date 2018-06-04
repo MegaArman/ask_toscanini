@@ -3,9 +3,7 @@
 //TODO check query length to begin with!
 //^should this only be done serverside?
 {
-  const queryObj =	{
-  						$and:[]
-                    };
+  const queryObj ={$and:[]};
   const cm = require("concertmaster");
 }
 
@@ -54,6 +52,10 @@ musicTerm = "ts"_ beats:([1-9][0-9]?) _ beatType:([1-9][0-9]?)
 / "key" _ key:([a-gA-G][b|#]?)
 {
 	queryObj.$and.push({"keySignatures": key.join("")});
+}
+/"lucky"
+{
+  queryObj.$and.push({});
 }
 
 _ "whitespace"

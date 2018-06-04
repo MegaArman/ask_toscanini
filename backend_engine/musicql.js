@@ -193,9 +193,14 @@ function peg$parse(input, options) {
       peg$c23 = function(key) {
       	queryObj.$and.push({"keySignatures": key.join("")});
       },
-      peg$c24 = peg$otherExpectation("whitespace"),
-      peg$c25 = /^[ \t\n\r]/,
-      peg$c26 = peg$classExpectation([" ", "\t", "\n", "\r"], false, false),
+      peg$c24 = "lucky",
+      peg$c25 = peg$literalExpectation("lucky", false),
+      peg$c26 = function() {
+        queryObj.$and.push({});
+      },
+      peg$c27 = peg$otherExpectation("whitespace"),
+      peg$c28 = /^[ \t\n\r]/,
+      peg$c29 = peg$classExpectation([" ", "\t", "\n", "\r"], false, false),
 
       peg$currPos          = 0,
       peg$savedPos         = 0,
@@ -923,6 +928,21 @@ function peg$parse(input, options) {
           peg$currPos = s0;
           s0 = peg$FAILED;
         }
+        if (s0 === peg$FAILED) {
+          s0 = peg$currPos;
+          if (input.substr(peg$currPos, 5) === peg$c24) {
+            s1 = peg$c24;
+            peg$currPos += 5;
+          } else {
+            s1 = peg$FAILED;
+            if (peg$silentFails === 0) { peg$fail(peg$c25); }
+          }
+          if (s1 !== peg$FAILED) {
+            peg$savedPos = s0;
+            s1 = peg$c26();
+          }
+          s0 = s1;
+        }
       }
     }
 
@@ -934,36 +954,34 @@ function peg$parse(input, options) {
 
     peg$silentFails++;
     s0 = [];
-    if (peg$c25.test(input.charAt(peg$currPos))) {
+    if (peg$c28.test(input.charAt(peg$currPos))) {
       s1 = input.charAt(peg$currPos);
       peg$currPos++;
     } else {
       s1 = peg$FAILED;
-      if (peg$silentFails === 0) { peg$fail(peg$c26); }
+      if (peg$silentFails === 0) { peg$fail(peg$c29); }
     }
     while (s1 !== peg$FAILED) {
       s0.push(s1);
-      if (peg$c25.test(input.charAt(peg$currPos))) {
+      if (peg$c28.test(input.charAt(peg$currPos))) {
         s1 = input.charAt(peg$currPos);
         peg$currPos++;
       } else {
         s1 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$c26); }
+        if (peg$silentFails === 0) { peg$fail(peg$c29); }
       }
     }
     peg$silentFails--;
     if (s0 === peg$FAILED) {
       s1 = peg$FAILED;
-      if (peg$silentFails === 0) { peg$fail(peg$c24); }
+      if (peg$silentFails === 0) { peg$fail(peg$c27); }
     }
 
     return s0;
   }
 
 
-    const queryObj =	{
-    						$and:[]
-                      };
+    const queryObj ={$and:[]};
     const cm = require("concertmaster");
 
 

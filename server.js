@@ -116,8 +116,20 @@ function onRequest(request, response)
           (err, scoreNames) => 
           {
             if (err) throw err;
-            response.end(JSON.stringify(scoreNames));
-            console.log("scoreNames", scoreNames);
+            let result;
+
+            if (queryString === "lucky")
+            {
+              const randomNum = Math.floor(Math.random() * scoreNames.length);
+              result = scoreNames[randomNum];
+            }
+            else
+            {
+              result = JSON.stringify(scoreNames);
+            }
+            
+            response.end(result);
+            console.log("result", result);
             console.timeEnd("took");
           });
       }

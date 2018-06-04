@@ -57,17 +57,14 @@ $("#lucky").on("click", () =>
     type: "POST",
     url: "/",
     data: "lucky",
-    success: (scoresJSON) => 
+    success: (result) => 
     {
       $(".download").remove();
       $("#resultsFor").text("It's your lucky day!!!");
       $("#query").text("");
 
-      let scoreName = JSON.parse(scoresJSON);
-      if($("#test1").is(":checked"))
-      {
-        scoreName = scoreName[0].replace(".xml", ".pdf");
-      }
+      const scoreName = ($("#test1").is(":checked")) ?
+        result.replace(".xml", ".pdf"): result;
 
       $("#matchingScores").append(makeScoreDownloadLink(scoreName)); 
     },      
