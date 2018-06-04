@@ -1,6 +1,10 @@
+"use strict";
 const http = require("http");
 const fs = require("fs");
-const searchDB = require("./backend_engine/searchDB.js");
+const assert = require("assert");
+const MongoClient = require("mongodb").MongoClient;
+const MQL = require("./backend_engine/musicql.js");
+let db;
 const port = 7999;
 const pdfDir = "/pdf_scores/";
 const musicxmlDir = "/musicxml_scores/";
@@ -103,23 +107,27 @@ function onRequest(request, response)
       console.log("requestBody", requestBody);
       response.writeHead(200, {"Content-Type": "text/plain"}); 
       const queryString = requestBody; 
-      searchDB(queryString, function(scores)
+      let mongoQueryObj;
+      console.time("took");
+      try 
       {
-        console.log("got " + JSON.stringify(scores));
-        response.end(JSON.stringify(scores));
-      }); 
+        mongoQueryObj = MQL.parse(queryString)[1];
+      }
+      catch (err)
+      {
+        console.log("BAD QUERY ", err);
+      }
+      
+      db.collection("scoreFacts").find(mongoQueryObj)
+        .project({_id:1})
+        .toArray(function(err, docs) 
+      {
+        assert.equal(err, null);
+        console.log("Found the following records");
+        console.log("docs", docs);        
+      });
 
-      //const queryObject = parseQueryString(queryString);
-
-      ////error string
-      //if (typeof queryObject === "string" && queryObject.includes("ERROR"))
-      //{
-      //  response.end(JSON.stringify(queryObject));
-      //}
-      //else
-      //{
-      //  response.end(JSON.stringify(searchFacts(queryObject)));
-      //}
+      console.timeEnd("took");
     });
   }
   else
@@ -129,10 +137,20 @@ function onRequest(request, response)
   }
 }
 
-const server = http.createServer(onRequest);
 
-// Listen on port, IP defaults to 127.0.0.1
-server.listen(port);
+MongoClient.connect("mongodb://localhost:27017", 
+function(err, client) 
+{
+  if(err) throw err;
 
-// Put a friendly message on the terminal
-console.log("Server running at http://127.0.0.1:" + port + "/");
+  db = client.db("askToscanini");
+
+  const server = http.createServer(onRequest);
+
+  // Listen on port, IP defaults to 127.0.0.1
+  server.listen(port);
+
+  // Put a friendly message on the terminal
+  console.log("Server running at http://127.0.0.1:" + port + "/");
+});
+
