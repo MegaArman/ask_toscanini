@@ -1,3 +1,5 @@
+//TODO: SHOULD NOT NEED TO DROP DB FOR THIS SCRIPT TO WORK
+
 const path = require("path");
 const fs = require("fs");
 const MongoClient = require("mongodb").MongoClient;

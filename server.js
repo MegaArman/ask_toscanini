@@ -5,6 +5,7 @@ const MongoClient = require("mongodb").MongoClient;
 const MQL = require("./backend_engine/musicql.js");
 
 let db;
+//7999 for dev and 1867 for prod
 const port = 7999;
 const pdfDir = "/pdf_scores/";
 const musicxmlDir = "/musicxml_scores/";
