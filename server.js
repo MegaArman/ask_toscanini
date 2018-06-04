@@ -108,9 +108,10 @@ function onRequest(request, response)
       console.log("requestBody", requestBody);
       response.writeHead(200, {"Content-Type": "text/plain"}); 
       const queryString = requestBody; 
-      console.time("took");
+      
       try 
       {
+        console.time("took");
         const mongoQueryObj = MQL.parse(queryString)[1];
 
         db.collection("scoreFacts").distinct("_id", mongoQueryObj,
@@ -129,9 +130,9 @@ function onRequest(request, response)
               result = JSON.stringify(scoreNames);
             }
             
+            console.timeEnd("took");
             response.end(result);
             console.log("result", result);
-            console.timeEnd("took");
           });
       }
       catch (err)
