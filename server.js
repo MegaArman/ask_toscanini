@@ -1,9 +1,9 @@
 "use strict";
 const http = require("http");
 const fs = require("fs");
-const assert = require("assert");
 const MongoClient = require("mongodb").MongoClient;
 const MQL = require("./backend_engine/musicql.js");
+
 let db;
 const port = 7999;
 const pdfDir = "/pdf_scores/";
@@ -107,27 +107,25 @@ function onRequest(request, response)
       console.log("requestBody", requestBody);
       response.writeHead(200, {"Content-Type": "text/plain"}); 
       const queryString = requestBody; 
-      let mongoQueryObj;
       console.time("took");
       try 
       {
-        mongoQueryObj = MQL.parse(queryString)[1];
+        const mongoQueryObj = MQL.parse(queryString)[1];
+
+        db.collection("scoreFacts").distinct("_id", mongoQueryObj,
+          (err, scoreNames) => 
+          {
+            if (err) throw err;
+            response.end(JSON.stringify(scoreNames));
+            console.log("scoreNames", scoreNames);
+            console.timeEnd("took");
+          });
       }
       catch (err)
       {
         console.log("BAD QUERY ", err);
+        response.end("error");
       }
-      
-      db.collection("scoreFacts").find(mongoQueryObj)
-        .project({_id:1})
-        .toArray(function(err, docs) 
-      {
-        assert.equal(err, null);
-        console.log("Found the following records");
-        console.log("docs", docs);        
-      });
-
-      console.timeEnd("took");
     });
   }
   else
@@ -136,7 +134,6 @@ function onRequest(request, response)
     send404Response(response);
   }
 }
-
 
 MongoClient.connect("mongodb://localhost:27017", 
 function(err, client) 
