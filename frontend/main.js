@@ -32,11 +32,8 @@ $("#ask").on("click", ()=>
       $("#resultsFor").text("Showing results for ");
       $("#query").text($("#search").val()); 
  
-      if (result.includes("ERROR"))
-      {
-        alert(result);
-        return;
-      }
+      if (result === "ERROR") return;
+    
       const scores = JSON.parse(result);
                           
       scores.forEach((scoreName) =>

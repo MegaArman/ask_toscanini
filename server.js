@@ -124,7 +124,7 @@ function onRequest(request, response)
       catch (err)
       {
         console.log("BAD QUERY ", err);
-        response.end("error");
+        response.end("ERROR");
       }
     });
   }
