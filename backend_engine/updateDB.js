@@ -1,44 +1,53 @@
-//TODO: SHOULD NOT NEED TO DROP DB FOR THIS SCRIPT TO WORK
-
-const path = require("path");
+//invoke with "node updateDB.js ..path to scoredir"
 const fs = require("fs");
 const MongoClient = require("mongodb").MongoClient;
-const assert = require("assert");
+const computeFacts = require("./computeFacts.js");
 
-// Connection URL
+const scoreDir = process.argv[2];
+const scoreNames = fs.readdirSync(scoreDir);
 const url = "mongodb://localhost:27017";
- 
-// Database Name
 const dbName = "askToscanini";
+const collectionName = "scoreFacts";
 
-//make db from facts.json
-const factsPath = "./facts.json";
-const factsJSON = fs.readFileSync(path.resolve(__dirname, factsPath));
-const factsObj = JSON.parse(factsJSON);
-const insertDocuments = function(db, callback) 
+let collection;
+let clientRef;
+
+MongoClient.connect(url).then((client) =>
 {
-  // Get the documents collection
-  const collection = db.collection("scoreFacts");
-
-  // Insert some documents
-  collection.insertMany(factsObj, function(err, result) 
-  {
-    assert.equal(err, null);
-    console.log("Inserted facts about the scores");
-    callback(result);
-  });
-};
-
-// Use connect method to connect to the server
-MongoClient.connect(url, function(err, client) 
+  console.log("Connected successfully to server"); 
+  clientRef = client;
+  collection = client.db(dbName).collection(collectionName);
+  return collection.distinct("_id", {});
+})
+.then((scoreNamesInDB) => 
 {
-  assert.equal(null, err);
-  console.log("Connected successfully to server");
- 
-  const db = client.db(dbName);
-
-  insertDocuments(db, function() 
+  const newScores = scoreNames.filter((scoreName) =>
+    !scoreNamesInDB.includes(scoreName)); 
+  const factsDB = [];
+  
+  newScores.forEach((scoreName) =>
   {
-    client.close();
+    //still read sync? This blocks!
+    console.log(`analyzing new score ${scoreName}`);
+    const musicxml = fs.readFileSync(scoreDir + scoreName);
+    const scoreFacts = computeFacts(musicxml);
+    scoreFacts["_id"] = scoreName;
+    factsDB.push(scoreFacts);
   });
+  
+  return factsDB.length > 0 ? collection.insertMany(factsDB) : null;
+})
+.then((inserted) => 
+{
+  if (inserted) console.log("successfully inserted the new scores' facts");
+  else console.log("no new scores to insert");
+  console.log("closing connection to db...");
+  clientRef.close();
+})
+.catch((reason) =>
+{
+  console.log(reason);
+  console.log("closing connection to db...");
+  clientRef.close();
 });
+
