@@ -19,12 +19,35 @@ MongoClient.connect(url).then((client) =>
   collection = client.db(dbName).collection(collectionName);
   return collection.distinct("_id", {});
 })
+.then((scoreNamesInDB) =>
+{
+  const deletedScores = scoreNamesInDB.filter((scoreName) =>
+    !scoreNames.includes(scoreName));
+  const deletedScoresWithId = deletedScores.map((deletedScore) => 
+  {
+    return {_id: deletedScore};
+  });
+
+  const filterQueryObj = {$or: deletedScoresWithId};
+
+  if (filterQueryObj.$or.length > 0)
+  {
+    collection.deleteMany(filterQueryObj).then((result) => 
+    {
+      console.log("deletedddd", filterQueryObj);
+    }).catch((reason) =>
+    {
+      console.log(reason);
+    });
+  }
+  return scoreNamesInDB;
+})
 .then((scoreNamesInDB) => 
 {
   const newScores = scoreNames.filter((scoreName) =>
     !scoreNamesInDB.includes(scoreName)); 
   const factsDB = [];
-  
+   
   newScores.forEach((scoreName) =>
   {
     //still read sync? This blocks!
