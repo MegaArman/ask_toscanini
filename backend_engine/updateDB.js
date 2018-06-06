@@ -19,8 +19,9 @@ MongoClient.connect(url).then((client) =>
   collection = client.db(dbName).collection(collectionName);
   return collection.distinct("_id", {});
 })
-.then((scoreNamesInDB) =>
+.then((scoreNamesInDB) => 
 {
+  //remove delete scores' fact records from db
   const deletedScores = scoreNamesInDB.filter((scoreName) =>
     !scoreNames.includes(scoreName));
   const deletedScoresWithId = deletedScores.map((deletedScore) => 
@@ -32,18 +33,16 @@ MongoClient.connect(url).then((client) =>
 
   if (filterQueryObj.$or.length > 0)
   {
-    collection.deleteMany(filterQueryObj).then((result) => 
+    collection.deleteMany(filterQueryObj).then(() => 
     {
-      console.log("deletedddd", filterQueryObj);
+      console.log(`deleted facts records ${filterQueryObj}`);
     }).catch((reason) =>
     {
       console.log(reason);
     });
   }
-  return scoreNamesInDB;
-})
-.then((scoreNamesInDB) => 
-{
+
+  //insert new scores
   const newScores = scoreNames.filter((scoreName) =>
     !scoreNamesInDB.includes(scoreName)); 
   const factsDB = [];
@@ -58,13 +57,20 @@ MongoClient.connect(url).then((client) =>
     factsDB.push(scoreFacts);
   });
   
-  return factsDB.length > 0 ? collection.insertMany(factsDB) : null;
+  if (factsDB.length > 0)
+  {
+    collection.insertMany(factsDB).then(()=>
+    {
+      console.log("successfully inserted the new scores' facts");
+    });
+  }
+  
+
+  //return factsDB.length > 0 ? collection.insertMany(factsDB) : null;
 })
-.then((inserted) => 
+.then(() => 
 {
-  if (inserted) console.log("successfully inserted the new scores' facts");
-  else console.log("no new scores to insert");
-  console.log("closing connection to db...");
+  console.log("no errors, closing connection to db...");
   clientRef.close();
 })
 .catch((reason) =>
