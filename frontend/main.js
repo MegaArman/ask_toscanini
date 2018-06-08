@@ -6,8 +6,8 @@ const musicxmlDir = "./musicxml_scores/";
 function makeScoreDownloadLink(scoreName) 
 {
  const dir = scoreName.includes("pdf") ? pdfDir : musicxmlDir;
- return "<a href='" + dir + scoreName + "'" +  
-         "class='download collection-item'" + "download>"+ scoreName + "</a>";
+ return `<a href=${dir + scoreName} class="download collection-item"  
+          download> ${scoreName}</a>`;
 }
 
 function makeSuggestionListItem(itemText, errClause)
