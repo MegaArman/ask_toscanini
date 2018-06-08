@@ -21,6 +21,8 @@ MongoClient.connect(url).then((client) =>
 })
 .then((scoreNamesInDB) => 
 {
+  const bulkWriteOperations = [];
+  
   //remove delete scores' fact records from db
   const deletedScores = scoreNamesInDB.filter((scoreName) =>
     !scoreNames.includes(scoreName));
@@ -33,13 +35,9 @@ MongoClient.connect(url).then((client) =>
 
   if (filterQueryObj.$or.length > 0)
   {
-    collection.deleteMany(filterQueryObj).then(() => 
-    {
-      console.log(`deleted facts records ${filterQueryObj}`);
-    }).catch((reason) =>
-    {
-      console.log(reason);
-    });
+     console.log("will delete records from db as they no longer exist",
+      filterQueryObj.$or);
+     bulkWriteOperations.push({"deleteMany": {"filter": filterQueryObj}}); 
   }
 
   //insert new scores
@@ -50,7 +48,6 @@ MongoClient.connect(url).then((client) =>
   newScores.forEach((scoreName) =>
   {
     //still read sync? This blocks!
-    console.log(`analyzing new score ${scoreName}`);
     const musicxml = fs.readFileSync(scoreDir + scoreName);
     const scoreFacts = computeFacts(musicxml);
     scoreFacts["_id"] = scoreName;
@@ -59,24 +56,26 @@ MongoClient.connect(url).then((client) =>
   
   if (factsDB.length > 0)
   {
-    collection.insertMany(factsDB).then(()=>
-    {
-      console.log("successfully inserted the new scores' facts");
-    });
+    console.log("will insert fact records for ", newScores);
+    bulkWriteOperations.push(...factsDB.map(doc => ({"insertOne": doc})));
   }
-  
 
-  //return factsDB.length > 0 ? collection.insertMany(factsDB) : null;
-})
-.then(() => 
-{
-  console.log("no errors, closing connection to db...");
-  clientRef.close();
+  if (bulkWriteOperations.length > 0 )
+  {
+    return collection.bulkWrite(bulkWriteOperations, {"ordered": false});
+  }
+  else 
+  {
+    console.log("nothing to do");
+  }
 })
 .catch((reason) =>
 {
   console.log(reason);
-  console.log("closing connection to db...");
+})
+.then(() => 
+{
+  console.log("Done. Closing connection to db...");
   clientRef.close();
 });
 
