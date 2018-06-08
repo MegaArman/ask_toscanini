@@ -112,7 +112,8 @@ function onRequest(request, response)
       try 
       {
         console.time("took");
-        const mongoQueryObj = (queryString === "lucky") ? 
+        const mongoQueryObj = 
+          (queryString === "lucky" || queryString.length === 0) ? 
           {} : MQL.parse(queryString)[1];
   
         db.collection("scoreFacts").distinct("_id", mongoQueryObj,
