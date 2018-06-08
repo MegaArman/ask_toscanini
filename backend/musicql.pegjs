@@ -1,5 +1,3 @@
-
-
 //TODO check query length to begin with!
 //^should this only be done serverside?
 {
@@ -52,10 +50,6 @@ musicTerm = "ts"_ beats:([1-9][0-9]?) _ beatType:([1-9][0-9]?)
 / "key" _ key:([a-gA-G][b|#]?)
 {
 	queryObj.$and.push({"keySignatures": key.join("")});
-}
-/"lucky"
-{
-  queryObj.$and.push({});
 }
 
 _ "whitespace"

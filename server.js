@@ -112,8 +112,9 @@ function onRequest(request, response)
       try 
       {
         console.time("took");
-        const mongoQueryObj = MQL.parse(queryString)[1];
-
+        const mongoQueryObj = (queryString === "lucky") ? 
+          {} : MQL.parse(queryString)[1];
+  
         db.collection("scoreFacts").distinct("_id", mongoQueryObj,
           (err, scoreNames) => 
           {
@@ -148,6 +149,7 @@ function onRequest(request, response)
         const errClause = queryString.substr(clauseStart, clauseEnd);
 
         console.log("BAD QUERY ", errClause);
+        //console.log(err);
         response.end(JSON.stringify({error : errClause}));
       }
     });
