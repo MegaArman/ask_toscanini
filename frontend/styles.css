@@ -4,9 +4,14 @@ body
   font-size: medium;
 }
 
-ul, p
+ul
 {
-  padding-left:4px !important;
+  padding-left: 40px !important;
+}
+
+li
+{
+  list-style-type: inherit !important;
 }
 
 .btn 
@@ -77,7 +82,7 @@ ul, p
  padding: 10px 20px;
 }
  
-#query
+#query, .errCond
 {
  font-style: italic;
 }
@@ -96,6 +101,16 @@ ul, p
 #radioButtons 
 {
   margin-bottom: 32px;
+}
+
+#suggestionsDiv
+{
+  display: none;
+}
+
+#suggestionsList
+{
+  list-style-type: initial;
 }
 
 @media only screen and (min-width: 663px)

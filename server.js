@@ -2,7 +2,7 @@
 const http = require("http");
 const fs = require("fs");
 const MongoClient = require("mongodb").MongoClient;
-const MQL = require("./backend_engine/musicql.js");
+const MQL = require("./backend/musicql.js");
 
 let db;
 //7999 for dev and 1867 for prod
@@ -137,8 +137,18 @@ function onRequest(request, response)
       }
       catch (err)
       {
-        console.log("BAD QUERY ", err);
-        response.end("ERROR");
+        const errPos = err.location.start.offset;
+        const beforeAndIndex = queryString.substr(0, errPos).lastIndexOf("and");
+        //condition should account for clause being first 
+        const clauseStart = (beforeAndIndex !== -1) ? beforeAndIndex + 3 : 0;
+        const afterAnd = queryString.substr(clauseStart, queryString.length)
+          .indexOf("and");
+        //condition should account for clause being last
+        const clauseEnd = (afterAnd !== -1) ? afterAnd : queryString.length;
+        const errClause = queryString.substr(clauseStart, clauseEnd);
+
+        console.log("BAD QUERY ", errClause);
+        response.end(JSON.stringify({error : errClause}));
       }
     });
   }

@@ -10,6 +10,11 @@ function makeScoreDownloadLink(scoreName)
          "class='download collection-item'" + "download>"+ scoreName + "</a>";
 }
 
+function makeSuggestionListItem(itemText, errClause)
+{
+  return `<li>${itemText} <i>${errClause}</i> </li>`;   
+}
+
 $("#search").on("keyup", (e) =>
 {
   if (e.keyCode === 13)
@@ -29,22 +34,36 @@ $("#ask").on("click", ()=>
     success: (result) => 
     {
       $(".download").remove();
-      $("#resultsFor").text("Showing results for ");
-      $("#query").text($("#search").val()); 
- 
-      if (result === "ERROR") return;
-    
-      const scores = JSON.parse(result);
-                          
-      scores.forEach((scoreName) =>
-      {
-        if($("#test1").is(":checked")) 
-        {
-          scoreName = scoreName.replace(".xml", ".pdf");
-        }
+            
+      const resultObj = JSON.parse(result);
 
-        $("#matchingScores").append(makeScoreDownloadLink(scoreName)); 
-      });
+      if (resultObj.error)
+      {
+        $("#suggestionsList").empty();
+
+        $("#resultsFor").text("No results found for ");
+        $("#query").text($("#search").val());
+        $("#suggestionsDiv").css("display", "block");
+        $("#suggestionsList")
+          .append(makeSuggestionListItem("check condition", resultObj.error));
+      }
+      else
+      {
+        $("#suggestionsDiv").css("display", "none");
+        $("#resultsFor").text("Showing results for ");
+        $("#query").text($("#search").val()); 
+        const scores = JSON.parse(result);
+                          
+        scores.forEach((scoreName) =>
+        {
+          if($("#test1").is(":checked")) 
+          {
+            scoreName = scoreName.replace(".xml", ".pdf");
+          }
+
+          $("#matchingScores").append(makeScoreDownloadLink(scoreName)); 
+        });
+      } 
     },      
     error: () => alert("no response from server")
   });
