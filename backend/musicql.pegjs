@@ -27,7 +27,8 @@ instrumentRange = instrument:([a-zA-Z0-9])+ _ min:([a-gA-G][b|#]?[0-9]) _ max:([
 
 composerInstrument = ci:([a-zA-Z0-9]+)
 {
-	queryObj.$and.push({"_id": {$regex:ci.join("").toLowerCase()}});
+        const CI = {$regex:ci.join("").toLowerCase()};
+	queryObj.$and.push({$or: [{"_id": CI}, {"instrumentRanges.instrumentName": CI}]});
 }
 
 musicTerm = "ts"_ beats:([1-9][0-9]?) _ beatType:([1-9][0-9]?)

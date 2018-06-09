@@ -165,7 +165,8 @@ function peg$parse(input, options) {
           queryObj.$and.push(rangeQuery);    
       },
       peg$c12 = function(ci) {
-      	queryObj.$and.push({"_id": {$regex:ci.join("").toLowerCase()}});
+              const CI = {$regex:ci.join("").toLowerCase()};
+      	queryObj.$and.push({$or: [{"_id": CI}, {"instrumentRanges.instrumentName": CI}]});
       },
       peg$c13 = "ts",
       peg$c14 = peg$literalExpectation("ts", false),
