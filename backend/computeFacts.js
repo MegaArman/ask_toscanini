@@ -20,7 +20,8 @@ module.exports = (musicxml) =>
   const tempos = toscanini.getTempos();
   facts["minTempo"] = Math.min(...tempos);
   facts["maxTempo"] = Math.max(...tempos);
-  facts["keySignatures"] = toscanini.getKeySignatures();
+  facts["keySignatures"] = toscanini.getKeySignatures()
+    .map(ks => ks.toLowerCase());
   facts["timeSignatures"] = toscanini.getTimeSignatures();
 
   return facts;

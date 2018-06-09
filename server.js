@@ -107,7 +107,7 @@ function onRequest(request, response)
     {
       console.log("requestBody", requestBody);
       response.writeHead(200, {"Content-Type": "text/plain"}); 
-      const queryString = requestBody; 
+      const queryString = requestBody.toLowerCase(); 
       
       try 
       {

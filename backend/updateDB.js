@@ -47,6 +47,7 @@ MongoClient.connect(url).then((client) =>
    
   newScores.forEach((scoreName) =>
   {
+    console.log(`will insert facts record for ${scoreName}`);
     //still read sync? This blocks!
     const musicxml = fs.readFileSync(scoreDir + scoreName);
     const scoreFacts = computeFacts(musicxml);
@@ -56,7 +57,6 @@ MongoClient.connect(url).then((client) =>
   
   if (factsDB.length > 0)
   {
-    console.log("will insert fact records for ", newScores);
     bulkWriteOperations.push(...factsDB.map(doc => ({"insertOne": doc})));
   }
 
