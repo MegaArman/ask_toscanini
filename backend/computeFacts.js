@@ -23,6 +23,6 @@ module.exports = (musicxml) =>
   facts["keySignatures"] = toscanini.getKeySignatures()
     .map(ks => ks.toLowerCase());
   facts["timeSignatures"] = toscanini.getTimeSignatures();
-
+  facts["dynamics"] = toscanini.getDynamics();
   return facts;
 };

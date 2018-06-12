@@ -18,7 +18,7 @@
     "concertmaster": "^0.2.2",
     "forever": "^0.15.3",
     "mongodb": "^3.1.0-beta4",
-    "toscanini": "^2.0.0",
+    "toscanini": "^2.0.2",
     "xml2js": "^0.4.17"
   },
   "devDependencies": {

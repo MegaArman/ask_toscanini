@@ -115,7 +115,8 @@ function onRequest(request, response)
         const mongoQueryObj = 
           (queryString === "lucky" || queryString.length === 0) ? 
           {} : MQL.parse(queryString)[1];
-  
+    
+        console.log("mongoQueryObj", mongoQueryObj);
         db.collection("scoreFacts").distinct("_id", mongoQueryObj,
           (err, scoreNames) => 
           {
@@ -139,6 +140,7 @@ function onRequest(request, response)
       }
       catch (err)
       {
+        console.log("err", err);
         const errPos = err.location.start.offset;
         const beforeAndIndex = queryString.substr(0, errPos).lastIndexOf("and");
         //condition should account for clause being first 

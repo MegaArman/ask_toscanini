@@ -27,7 +27,7 @@ instrumentRange = instrument:([a-zA-Z0-9])+ _ min:([a-gA-G][b|#]?[0-9]) _ max:([
 
 composerInstrument = ci:([a-zA-Z0-9]+)
 {
-        const CI = {$regex:ci.join("").toLowerCase()};
+        const CI = {$regex:ci.join("")};
 	queryObj.$and.push({$or: [{"_id": CI}, {"instrumentRanges.instrumentName": CI}]});
 }
 
@@ -35,7 +35,8 @@ musicTerm = "ts"_ beats:([1-9][0-9]?) _ beatType:([1-9][0-9]?)
 {
 	queryObj.$and.push(
     	{"timeSignatures": 
-    		{"beats": parseInt(beats.join("", 10)), "beatType": parseInt(beatType.join("", 10))}
+    		{"beats": parseInt(beats.join("", 10)), 
+                 "beatType": parseInt(beatType.join("", 10))}
         });
 }
 / "tempo" _ min:([0-9][0-9]?[0-9]?) _ max:([1-9][0-9]?[0-9]?)
@@ -52,7 +53,10 @@ musicTerm = "ts"_ beats:([1-9][0-9]?) _ beatType:([1-9][0-9]?)
 {
 	queryObj.$and.push({"keySignatures": key.join("")});
 }
-
+/ "dynamic" _ dynamic:([a-zA-Z0-9]+)
+{
+  queryObj.$and.push({"dynamics": dynamic.join("")})
+}
 _ "whitespace"
   = [ \t\n\r]*
 
