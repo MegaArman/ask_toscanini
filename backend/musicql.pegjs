@@ -53,9 +53,12 @@ musicTerm = "ts"_ beats:([1-9][0-9]?) _ beatType:([1-9][0-9]?)
 {
 	queryObj.$and.push({"keySignatures": key.join("")});
 }
-/ "dynamic" _ dynamic:([a-zA-Z0-9]+)
+/ "dynamic" _ dynamic:
+("ffffff"/"fffff"/"ffff"/"fff"/"ff"/"fp"/"fz"/"f"/"mf"/
+"mp"/"pppppp"/"ppppp"/"pppp"/"ppp"/"pp"/"p"/"rfz"/
+"rf"/"sfz"/"sffz"/"sfpp"/"sfp"/"sf")
 {
-  queryObj.$and.push({"dynamics": dynamic.join("")})
+  queryObj.$and.push({"dynamics": dynamic});
 }
 _ "whitespace"
   = [ \t\n\r]*

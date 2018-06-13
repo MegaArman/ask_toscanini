@@ -120,7 +120,7 @@ function onRequest(request, response)
         db.collection("scoreFacts").distinct("_id", mongoQueryObj,
           (err, scoreNames) => 
           {
-            if (err) throw err;
+            if (err) console.log(err);
             let result;
 
             if (queryString === "lucky")
