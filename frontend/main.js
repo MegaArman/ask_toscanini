@@ -15,17 +15,11 @@ function makeSuggestionListItem(itemText, errClause)
   return `<li>${itemText} <i>${errClause}</i> </li>`;   
 }
 
-$("#search").on("keyup", (e) =>
-{
-  if (e.keyCode === 13)
-  {
-   return false;
-  }
-});
 
-$("#ask").on("click", ()=> 
-{   
+const submitQuery = () =>
+{
   const queryString = $("#search").val();
+
   $.ajax(
   {
     type: "POST",
@@ -67,6 +61,23 @@ $("#ask").on("click", ()=>
     },      
     error: () => alert("no response from server")
   });
+};
+
+$("#search").on("keyup", (e) =>
+{
+  //enter key
+  if (e.keyCode === 13)
+  {
+    submitQuery(); 
+    return false;
+  }
+});
+
+
+
+$("#ask").on("click", ()=> 
+{   
+  submitQuery();
 });
 
 $("#lucky").on("click", () =>
