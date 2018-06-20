@@ -116,7 +116,7 @@ function onRequest(request, response)
           (queryString === "lucky" || queryString.length === 0) ? 
           {} : MQL.parse(queryString)[1];
     
-        console.log("mongoQueryObj", mongoQueryObj);
+        console.log("mongoQueryObj", JSON.stringify(mongoQueryObj));
         db.collection("scoreFacts").distinct("_id", mongoQueryObj,
           (err, scoreNames) => 
           {
