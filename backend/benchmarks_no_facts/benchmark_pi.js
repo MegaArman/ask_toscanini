@@ -1,7 +1,7 @@
 //built from writeFacts
 const fs = require("fs");
 const scoreDir = process.argv[2];
-const numRuns = parseInt(process.argv[3]);
+const numRuns = 10;
 console.log(`will analyze ${scoreDir} ${numRuns} times`); 
 const scoreNames = fs.readdirSync(scoreDir);
 const Toscanini = require("./Toscanini.js");
