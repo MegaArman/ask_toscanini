@@ -1,10 +1,7 @@
 //built from writeFacts
 const fs = require("fs");
-
 const scoreDir = process.argv[2];
 const scoreNames = fs.readdirSync(scoreDir);
-const factsDB = [];
-
 const Toscanini = require("./Toscanini.js");
 
 const discTimeArray = [];
@@ -15,7 +12,7 @@ const computeFacts = (musicxml) =>
 {
   const tb = Toscanini(musicxml);
   parseTimeArray.push(tb.parseTime);
-
+  //---------------------------------
   const toscanini = tb.instance;
   const instrumentNames = toscanini.getInstrumentNames(); //[]
   const facts = {}; 
@@ -32,13 +29,11 @@ const computeFacts = (musicxml) =>
   const tempos = toscanini.getTempos();
   facts["minTempo"] = Math.min(...tempos);
   facts["maxTempo"] = Math.max(...tempos);
-  facts["keySignatures"] = toscanini.getKeySignatures()
-    .map(ks => ks.toLowerCase());
+  facts["keySignatures"] = toscanini.getKeySignatures();
   facts["timeSignatures"] = toscanini.getTimeSignatures();
   facts["dynamics"] = toscanini.getDynamics();
   return facts;
 };
-
 
 scoreNames.forEach((scoreName) =>
 {
@@ -46,13 +41,11 @@ scoreNames.forEach((scoreName) =>
   const musicxml = fs.readFileSync(scoreDir + scoreName);
   const discTime = process.hrtime(timePreDisc)[1];
   
-  //console.log(discTime);
   discTimeArray.push(discTime);
   
   const timePreParseAndSearch = process.hrtime();
   const scoreFacts = {};
   scoreFacts[scoreName] = computeFacts(musicxml);
-  factsDB.push(scoreFacts);
 
   const parseAndSearchTime = process.hrtime(timePreParseAndSearch)[1];
   const searchTime = parseAndSearchTime - 
@@ -70,10 +63,6 @@ const sum = (arr) =>
   return sum;
 };
 
-console.log(sum(discTimeArray));
-console.log(sum(parseTimeArray));
-console.log(sum(searchTimeArray));
-//console.log(JSON.stringify(results));
-
-module.exports = factsDB;
-
+fs.writeFileSync("discTime.txt", sum(discTimeArray));
+fs.writeFileSync("parseTime.txt", sum(parseTimeArray));
+fs.writeFileSync("searchTime.txt", sum(searchTimeArray));
