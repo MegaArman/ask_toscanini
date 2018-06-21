@@ -1,6 +1,8 @@
 //built from writeFacts
 const fs = require("fs");
 const scoreDir = process.argv[2];
+const numRuns = parseInt(process.argv[3]);
+console.log(`will analyze ${scoreDir} ${numRuns} times`); 
 const scoreNames = fs.readdirSync(scoreDir);
 const Toscanini = require("./Toscanini.js");
 
@@ -11,7 +13,9 @@ const finalResult =
  searchTimeRuns: []
 };
 
-for (let i = 0; i < 2; i++)
+const NS_PER_SEC = 1e9;
+
+for (let i = 0; i < numRuns; i++)
 {
   let totalDiscTime = 0;
   let totalParseTime = 0;
@@ -21,7 +25,8 @@ for (let i = 0; i < 2; i++)
   {
     const timePreDisc = process.hrtime();
     const musicxml = fs.readFileSync(scoreDir + scoreName);
-    const discTime = process.hrtime(timePreDisc)[1];
+    const diffDiscTime = process.hrtime(timePreDisc);
+    const discTime = diffDiscTime[0] * NS_PER_SEC + diffDiscTime[1];
     totalDiscTime += discTime;
     //-------------------------------- 
     const tb = Toscanini(musicxml);
@@ -48,7 +53,8 @@ for (let i = 0; i < 2; i++)
     facts["timeSignatures"] = toscanini.getTimeSignatures();
     facts["dynamics"] = toscanini.getDynamics();
 
-    const searchTime = process.hrtime(timePreSearch)[1];
+    const diffSearchTime = process.hrtime(timePreSearch);
+    const searchTime = diffSearchTime[0] * NS_PER_SEC + diffSearchTime[1];
     totalSearchTime += searchTime;
   });
 

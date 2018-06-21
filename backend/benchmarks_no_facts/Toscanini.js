@@ -217,14 +217,15 @@ const createToscanini = (etree) =>
 
 //======================================================================
 const elementtree = require("elementtree");
-let parseTime;
+const NS_PER_SEC = 1e9;
 
 const constructor = (musicxml) =>
 {
   const preParseTime = process.hrtime();
   const etree = elementtree.parse(musicxml.toString());
-  parseTime = process.hrtime(preParseTime);
-  return {instance: createToscanini(etree), parseTime: parseTime[1]};
+  const parseTimeDiff = process.hrtime(preParseTime);
+  const parseTime = parseTimeDiff[0] * NS_PER_SEC + parseTimeDiff[1];
+  return {instance: createToscanini(etree), parseTime: parseTime};
 };
 
 module.exports = constructor;
