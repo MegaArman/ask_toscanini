@@ -10,11 +10,15 @@ function makeScoreDownloadLink(scoreName)
           download> ${scoreName}</a>`;
 }
 
-function makeSuggestionListItem(itemText, errClause)
+function makeSuggestionListItem(errorClause, semanticError)
 {
-  return `<li>${itemText} <i>${errClause}</i> </li>`;   
+  const suggestionListItem = (semanticError) ?
+  `<li>check condition <i>${errorClause}</i> </li>
+          <br> ${semanticError}`
+  :
+  `<li>check condition <i>${errorClause}</i> </li>`;  
+  return suggestionListItem;
 }
-
 
 const submitQuery = () =>
 {
@@ -31,7 +35,7 @@ const submitQuery = () =>
             
       const resultObj = JSON.parse(result);
 
-      if (resultObj.error)
+      if (resultObj.errorClause)
       {
         $("#suggestionsList").empty();
 
@@ -39,7 +43,10 @@ const submitQuery = () =>
         $("#query").text($("#search").val());
         $("#suggestionsDiv").css("display", "block");
         $("#suggestionsList")
-          .append(makeSuggestionListItem("check condition", resultObj.error));
+          .append(
+            makeSuggestionListItem(resultObj.errorClause,
+              resultObj.semanticError)
+          );
       }
       else
       {

@@ -159,10 +159,18 @@ function peg$parse(input, options) {
           const rangeQuery = {};
           const minPitch = cm.noteStringToMidiNum(min.join("", 10));
           const maxPitch = cm.noteStringToMidiNum(max.join("", 10));
-          rangeQuery[path + "instrumentName"] = {$regex: instrument.join("")};
-          rangeQuery[path + "minPitch"] = {$gte: minPitch};  
-          rangeQuery[path + "maxPitch"] = {$lte: maxPitch};
-          queryObj.$and.push(rangeQuery);    
+
+          if (minPitch < maxPitch)
+          {
+            rangeQuery[path + "instrumentName"] = {$regex: instrument.join("")};
+            rangeQuery[path + "minPitch"] = {$gte: minPitch};  
+            rangeQuery[path + "maxPitch"] = {$lte: maxPitch};
+            queryObj.$and.push(rangeQuery);    
+          }
+          else
+          {
+            expected("pitch range should be from low to high");
+          }
       },
       peg$c12 = function(ci) {
               const CI = {$regex:ci.join("")};
@@ -185,9 +193,13 @@ function peg$parse(input, options) {
       	const minTempo = parseInt(min.join("", 10));
               const maxTempo = parseInt(max.join("", 10));
           
-      	if (minTempo < maxTempo)
+          if (minTempo < maxTempo)
           {
           	queryObj.$and.push({"minTempo": {$gte: minTempo}}, {"maxTempo": {$lte: maxTempo}});
+          }
+          else
+          {
+            expected("tempo range should be from low to high");
           }
       },
       peg$c21 = "key",

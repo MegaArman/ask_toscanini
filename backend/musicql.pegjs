@@ -19,10 +19,18 @@ instrumentRange = instrument:([a-zA-Z0-9])+ _ min:([a-gA-G][b|#]?[0-9]) _ max:([
     const rangeQuery = {};
     const minPitch = cm.noteStringToMidiNum(min.join("", 10));
     const maxPitch = cm.noteStringToMidiNum(max.join("", 10));
-    rangeQuery[path + "instrumentName"] = {$regex: instrument.join("")};
-    rangeQuery[path + "minPitch"] = {$gte: minPitch};  
-    rangeQuery[path + "maxPitch"] = {$lte: maxPitch};
-    queryObj.$and.push(rangeQuery);    
+
+    if (minPitch < maxPitch)
+    {
+      rangeQuery[path + "instrumentName"] = {$regex: instrument.join("")};
+      rangeQuery[path + "minPitch"] = {$gte: minPitch};  
+      rangeQuery[path + "maxPitch"] = {$lte: maxPitch};
+      queryObj.$and.push(rangeQuery);    
+    }
+    else
+    {
+      expected("pitch range should be from low to high");
+    }
 }
 
 composerInstrument = ci:([a-zA-Z0-9]+)
@@ -44,9 +52,13 @@ musicTerm = "ts"_ beats:([1-9][0-9]?) _ beatType:([1-9][0-9]?)
 	const minTempo = parseInt(min.join("", 10));
         const maxTempo = parseInt(max.join("", 10));
     
-	if (minTempo < maxTempo)
+    if (minTempo < maxTempo)
     {
     	queryObj.$and.push({"minTempo": {$gte: minTempo}}, {"maxTempo": {$lte: maxTempo}});
+    }
+    else
+    {
+      expected("tempo range should be from low to high");
     }
 }
 / "key" _ key:([a-gA-G][b|#]?)

@@ -140,7 +140,6 @@ function onRequest(request, response)
       }
       catch (err)
       {
-        console.log("err", err);
         const errPos = err.location.start.offset;
         const beforeAndIndex = queryString.substr(0, errPos).lastIndexOf("and");
         //condition should account for clause being first 
@@ -149,11 +148,13 @@ function onRequest(request, response)
           .indexOf("and");
         //condition should account for clause being last
         const clauseEnd = (afterAnd !== -1) ? afterAnd : queryString.length;
-        const errClause = queryString.substr(clauseStart, clauseEnd);
+        const errorClause = queryString.substr(clauseStart, clauseEnd); 
+        const semanticError = err.expected[0].description;
+        const errReponsObj = 
+          {errorClause : errorClause, semanticError: semanticError};
 
-        console.log("BAD QUERY ", errClause);
-        //console.log(err);
-        response.end(JSON.stringify({error : errClause}));
+        console.log("errResponseObj", JSON.stringify(errReponsObj));
+        response.end(JSON.stringify(errReponsObj));
       }
     });
   }
