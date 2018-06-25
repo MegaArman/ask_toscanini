@@ -1,5 +1,4 @@
 //converts a directory of MusicXML to pdf
-
 const exec = require("child_process").exec;
 const fs = require("fs");
 
@@ -9,11 +8,11 @@ const xmlPieceNames = fs.readdirSync(xmlScoresDir);
 
 xmlPieceNames.forEach((xmlPieceName) =>
 {
-  let pdfName = xmlPieceName.replace(".xml", ".pdf");
+  const pdfName = xmlPieceName.replace(".xml", ".pdf");
 	
   exec("musescore " + xmlScoresDir + xmlPieceName + " -o " 
        + pdfScoresDir + pdfName,
-    function (error, stdout, stderr)
+    (error, stdout, stderr) =>
     {
       //musescore may cause errors (segfaults)
       //but may still produce the pdfs- just be aware...
