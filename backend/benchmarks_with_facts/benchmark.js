@@ -8,7 +8,7 @@ const result = {"runTimes": []};
 let db;
 
 MongoClient.connect(dbURL, {useNewUrlParser: true},
-function(err, client) 
+(err, client) =>
 {
   if(err) throw err;
   db = client.db("askToscanini");
