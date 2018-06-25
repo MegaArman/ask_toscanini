@@ -21,6 +21,9 @@ module.exports = {
         ],
         "eqeqeq": 2,
         "brace-style": [2, "allman"],
-        "max-len":  [2]
+        "max-len":  [2],
+        "no-var": "error",
+        "func-style": [2, "expression"],
+        "prefer-arrow-callback": [2]
     }
 };
