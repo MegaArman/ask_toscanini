@@ -1,5 +1,4 @@
 //built from writeFacts
-const fs = require("fs");
 const scoreDir = process.argv[2];
 const numRuns = 10;
 console.log(`will analyze ${scoreDir} ${numRuns} times`); 
@@ -63,4 +62,4 @@ for (let i = 0; i < numRuns; i++)
   finalResult.searchTimeRuns.push(totalSearchTime);
 }
 
-fs.writeFileSync("benchmark_pi.json", JSON.stringify(finalResult));
+console.log(JSON.stringify(finalResult));
