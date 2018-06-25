@@ -10,14 +10,14 @@ const port = 7999;
 const pdfDir = "/pdf_scores/";
 const musicxmlDir = "/musicxml_scores/";
 
-function send404Response(response)
+const send404Response = (response) =>
 {
   response.writeHead(404,{"Content-Type": "text/plain"});
   response.write("Error 404: Page not found");
   response.end();
-}
+};
 
-function onRequest(request, response)
+const onRequest = (request, response) =>
 {
   if (request.method === "GET")
   {
@@ -163,10 +163,10 @@ function onRequest(request, response)
     console.log("bad request, will send 404");
     send404Response(response);
   }
-}
+};
 
 MongoClient.connect("mongodb://localhost:27017", 
-function(err, client) 
+(err, client) =>
 {
   if(err) throw err;
 

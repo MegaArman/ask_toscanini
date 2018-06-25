@@ -3,14 +3,14 @@
 const pdfDir = "./pdf_scores/";
 const musicxmlDir = "./musicxml_scores/";
 
-function makeScoreDownloadLink(scoreName) 
+const makeScoreDownloadLink = (scoreName) =>
 {
  const dir = scoreName.includes("pdf") ? pdfDir : musicxmlDir;
  return `<a href=${dir + scoreName} class="download collection-item"  
           download> ${scoreName}</a>`;
-}
+};
 
-function makeSuggestionListItem(errorClause, semanticError)
+const makeSuggestionListItem = (errorClause, semanticError) =>
 {
   const suggestionListItem = (semanticError) ?
   `<li>check condition <i>${errorClause}</i> </li>
@@ -18,7 +18,7 @@ function makeSuggestionListItem(errorClause, semanticError)
   :
   `<li>check condition <i>${errorClause}</i> </li>`;  
   return suggestionListItem;
-}
+};
 
 const submitQuery = () =>
 {
@@ -79,8 +79,6 @@ $("#search").on("keyup", (e) =>
     return false;
   }
 });
-
-
 
 $("#ask").on("click", ()=> 
 {   
