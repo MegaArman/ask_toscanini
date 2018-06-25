@@ -1,9 +1,12 @@
 //converts a directory of MusicXML to pdf
+//note this script requires musescore which is not be available
+//through npm
+//execute like node musicxml2pdf.js ../musicxml_scores ../pdf_scores
 const exec = require("child_process").exec;
 const fs = require("fs");
 
-const xmlScoresDir = "./musicxml_scores/";
-const pdfScoresDir = "./pdf_scores/";
+const xmlScoresDir = process.argv[2];
+const pdfScoresDir = process.argv[3];
 const xmlPieceNames = fs.readdirSync(xmlScoresDir);
 
 xmlPieceNames.forEach((xmlPieceName) =>
