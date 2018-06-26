@@ -18,14 +18,17 @@
        </a>
     </div>
 
-    <h4>About</h4>
-    <p><i>Ask Toscanini! </i> is a first-of-a-kind deep search engine for music scores, developed at
-      Virginia Tech. It aims to make finding music scores easier for musicians and musicologists
-      by allowing for custom search queries.
+    <h3>About</h3>
+    <p><i>Ask Toscanini! </i> is a first-of-a-kind search engine for music scores.
+      It expedites the score finding process by supporting search queries which 
+      pertain to the content and structure of music scores.
+      
+      We have written a paper detailing the anatomy of the engine
+      <a href="https://drive.google.com/file/d/1l_z4Gb_36vkIpCPmi86quW3UbYIRPLmP/view?usp=sharing">here</a>.
       <br /><br />
       Developer: Arman Bahraini (arman1 at vt.edu)
       <br />
-      Supervisor: Dr. Tilevich (tilevich at cs.vt.edu)
+      Supervisor: Dr. Eli Tilevich (tilevich at cs.vt.edu)
     </p>
 
     <h4>Instructions</h4>
@@ -63,6 +66,13 @@
       so querying for "trumpet F3 D5" can give you scores with 
       "Trumpets in C" assuming the range is appropriate</li>
     </ul>
+    <h4>Troubleshooting</h4>
+    <p>
+      Our engine supports syntactic and semantic error checking. What this means is that we try to detect typos
+      or otherwise musically invalid search conditions, so you won't be presented with irrelevant scores. The language 
+      of music is of course very intricate and filled with edge cases however. If you feel a search query isn't returning 
+      scores correctly, or if you have any other suggestions, please feel free to contact the developer.
+    </p>
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
   </body>
 </html>
