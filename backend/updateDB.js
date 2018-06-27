@@ -7,7 +7,7 @@ const scoreDir = process.argv[2];
 const scoreNames = fs.readdirSync(scoreDir);
 const url = "mongodb://localhost:27017";
 const dbName = "askToscanini";
-const collectionName = "scoreFacts_test"; //can change for testing purposes
+const collectionName = "scoreFacts"; //can change for testing purposes
 
 let collection;
 let clientRef;
