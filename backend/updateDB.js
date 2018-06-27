@@ -7,7 +7,7 @@ const scoreDir = process.argv[2];
 const scoreNames = fs.readdirSync(scoreDir);
 const url = "mongodb://localhost:27017";
 const dbName = "askToscanini";
-const collectionName = "scoreFacts"; //can change for testing purposes
+const collectionName = "scoreFacts_test"; //can change for testing purposes
 
 let collection;
 let clientRef;
@@ -33,12 +33,13 @@ MongoClient.connect(url).then((client) =>
 
   const filterQueryObj = {$or: deletedScoresWithId};
 
-  if (filterQueryObj.$or.length > 0)
-  {
-     console.log("will delete records from db as they no longer exist",
-      filterQueryObj.$or);
-     bulkWriteOperations.push({"deleteMany": {"filter": filterQueryObj}}); 
-  }
+  (filterQueryObj.$or.length > 0) &&
+    (()=>
+    {
+       console.log("will delete records from db as they no longer exist",
+        filterQueryObj.$or);
+       bulkWriteOperations.push({"deleteMany": {"filter": filterQueryObj}}); 
+    })();
 
   //insert new scores
   const newScores = scoreNames.filter((scoreName) =>
@@ -53,19 +54,16 @@ MongoClient.connect(url).then((client) =>
     return scoreFacts;
   });
  
-  if (factsDB.length > 0)
-  {
+  (factsDB.length > 0) &&
     bulkWriteOperations.push(...factsDB.map(doc => ({"insertOne": doc})));
-  }
+  
 
-  if (bulkWriteOperations.length > 0 )
-  {
-    return collection.bulkWrite(bulkWriteOperations, {"ordered": false});
-  }
-  else 
-  {
+  const promiseOrFalse = (bulkWriteOperations.length > 0) ?
+    collection.bulkWrite(bulkWriteOperations, {"ordered": false})
+    :
     console.log("nothing to do");
-  }
+
+  return promiseOrFalse; 
 })
 .catch((reason) =>
 {
