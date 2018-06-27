@@ -7,7 +7,7 @@ const scoreDir = process.argv[2];
 const scoreNames = fs.readdirSync(scoreDir);
 const url = "mongodb://localhost:27017";
 const dbName = "askToscanini";
-const collectionName = "scoreFacts";
+const collectionName = "scoreFacts"; //can change for testing purposes
 
 let collection;
 let clientRef;
@@ -43,18 +43,16 @@ MongoClient.connect(url).then((client) =>
   //insert new scores
   const newScores = scoreNames.filter((scoreName) =>
     !scoreNamesInDB.includes(scoreName)); 
-  const factsDB = [];
-   
-  newScores.forEach((scoreName) =>
+  const factsDB = newScores.map((scoreName) =>
   {
     console.log(`will insert facts record for ${scoreName}`);
     //still read sync? This blocks!
     const musicxml = fs.readFileSync(scoreDir + scoreName);
     const scoreFacts = computeFacts(musicxml);
     scoreFacts["_id"] = scoreName;
-    factsDB.push(scoreFacts);
+    return scoreFacts;
   });
-  
+ 
   if (factsDB.length > 0)
   {
     bulkWriteOperations.push(...factsDB.map(doc => ({"insertOne": doc})));
