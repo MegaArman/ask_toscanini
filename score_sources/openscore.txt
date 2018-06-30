@@ -1,0 +1,8 @@
+total 67600
+-rw-r--r--  1 arman  staff   7141963 Jun 28 16:16 bach_brandenburg_conerto_no3.xml
+-rw-r--r--  1 arman  staff    372438 Jun 28 16:16 beethoven_fur_elise.xml
+-rw-r--r--  1 arman  staff     62684 Jun 28 16:16 bruckner_aequale_no1.xml
+-rw-r--r--  1 arman  staff   1699080 Jun 28 16:16 debussy_deux_arabesques.xml
+-rw-r--r--  1 arman  staff  10151898 Jun 28 16:16 faure_piano_quintet_no2.xml
+-rw-r--r--  1 arman  staff  14542128 Jun 28 16:28 mozart_symphony_no41.xml
+-rw-r--r--  1 arman  staff    627335 Jun 28 16:16 schubert_allegretto_in_cm.xml

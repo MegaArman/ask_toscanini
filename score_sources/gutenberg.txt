@@ -1,0 +1,11 @@
+total 16536
+-rw-r--r--  1 arman  staff  2459520 Jun 28 18:03 bach_brandenburg2_mov1.xml
+-rw-r--r--  1 arman  staff   291939 Jun 28 18:03 bach_brandenburg2_mov2.xml
+-rw-r--r--  1 arman  staff  1020579 Jun 28 18:03 bach_brandenburg2_mov3.xml
+-rw-r--r--  1 arman  staff   302609 Jun 28 18:24 mozart_string_quartet2_mov1.xml
+-rw-r--r--  1 arman  staff   302609 Jun 28 18:24 mozart_string_quartet2_mov2.xml
+-rw-r--r--  1 arman  staff   344085 Jun 28 18:24 mozart_string_quartet2_mov3.xml
+-rw-r--r--  1 arman  staff  1273572 Jun 28 18:36 schubert1_string_quartet10_mov1.xml
+-rw-r--r--  1 arman  staff   366405 Jun 28 18:36 schubert1_string_quartet10_mov2.xml
+-rw-r--r--  1 arman  staff   478423 Jun 28 18:36 schubert1_string_quartet10_mov3.xml
+-rw-r--r--  1 arman  staff  1606151 Jun 28 18:36 schubert1_string_quartet10_mov4.xml
