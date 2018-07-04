@@ -1,8 +1,3 @@
-h1
-{
-  display: none;
-}
-
 body
 {
   margin-top: 64px;
@@ -36,10 +31,14 @@ li
  color: #0366d6 !important;
 }
 
-.logo 
+#logo1
 {
-  display: block;
-  width: 100%;
+  display: inline;
+}
+
+#logo2
+{
+  display: none;
 }
 
 #ask:hover, #lucky:hover
@@ -120,25 +119,19 @@ li
 @media only screen and (min-width: 663px)
 {
   /* tablets and desktop */
-  h1
-  {
-    display: inline;
-  }
-
-  h3
-  {
-    display: none;
-  }
-
   body 
   {
     font-size: large;
   }
-
-  .logo
+  
+  #logo1
   {
-    margin-left: auto;
-    margin-right: auto;
+    display: none;
+  }
+
+  #logo2
+  {
+    display: inline;
   }
 
   #lucky
@@ -150,11 +143,6 @@ li
 @media only screen and (min-width: 900px)
 {
   /* Large devices */
-  .logo 
-  {
-    width: 66%;
-  }  
-
   #navButton
   {
     top: 32px;
@@ -162,13 +150,5 @@ li
   }
 }
 
- @media only screen and (min-width: 1200px)
-{
-  /* Very Large devices */
-  .logo 
-  {
-    width: 40%;
-  }  
-}
 
 
