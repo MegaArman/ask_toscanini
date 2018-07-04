@@ -54,6 +54,7 @@ li
 #lucky 
 {
   margin-bottom: 20px;
+  display:none;
 }
 
 #navButton
@@ -116,9 +117,19 @@ li
   display: none;
 }
 
-@media only screen and (min-width: 663px)
+@media only screen and (min-width: 500px)
 {
-  /* tablets and desktop */
+  /* large phones */
+  #lucky
+  {
+    margin-left: 12px;
+    display:inline;
+  }
+}
+
+@media only screen and (min-width: 768px)
+{
+  /* tablets */
   body 
   {
     font-size: large;
@@ -133,22 +144,15 @@ li
   {
     display: inline;
   }
-
-  #lucky
-  {
-    margin-left: 12px;
-  }
 }
  
-@media only screen and (min-width: 900px)
+@media only screen and (min-width: 992px)
 {
-  /* Large devices */
+  /* laptops onwards */
   #navButton
   {
     top: 32px;
     right: 32px;
   }
 }
-
-
 
