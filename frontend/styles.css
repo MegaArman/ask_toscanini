@@ -1,3 +1,8 @@
+h1
+{
+  display: none;
+}
+
 body
 {
   margin-top: 64px;
@@ -115,6 +120,16 @@ li
 @media only screen and (min-width: 663px)
 {
   /* tablets and desktop */
+  h1
+  {
+    display: inline;
+  }
+
+  h3
+  {
+    display: none;
+  }
+
   body 
   {
     font-size: large;
