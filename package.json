@@ -12,7 +12,8 @@
   },
   "scripts": {
     "lint": "./node_modules/.bin/eslint *.js",
-    "test": "tape *.spec.js | faucet"
+    "test": "tape *.spec.js | faucet",
+    "start": "node backend/updateDB.js musicxml_scores/ && node server.js"
   },
   "dependencies": {
     "concertmaster": "^0.2.2",
