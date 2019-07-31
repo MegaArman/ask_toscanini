@@ -2,7 +2,7 @@
 const http = require("http");
 const fs = require("fs");
 const MongoClient = require("mongodb").MongoClient;
-const MQL = require("./backend/musicql.js");
+const MQL = require(__dirname+"/backend/musicql.js");
 
 let db;
 //7999 for dev and 1867 for prod
@@ -24,33 +24,33 @@ const onRequest = (request, response) =>
     if (request.url === "/")
     {
       response.writeHead(200, {"Content-Type": "text/html"});
-      fs.createReadStream("./frontend/index.html").pipe(response);
+      fs.createReadStream(__dirname+"/frontend/index.html").pipe(response);
     }
     else if (request.url === "/info")
     {
       response.writeHead(200, {"Content-Type": "text/html"});
-      fs.createReadStream("./frontend/info.html").pipe(response);
+      fs.createReadStream(__dirname+"/frontend/info.html").pipe(response);
     }
     else if (request.url ==="/materialize.css")
     {
       response.writeHead(200, {"Content-Type": "text/css"});
-      fs.createReadStream("./frontend/materialize.css").pipe(response);
+      fs.createReadStream(__dirname+"/frontend/materialize.css").pipe(response);
     }
     else if (request.url ==="/styles.css")
     {
       response.writeHead(200, {"Content-Type": "text/css"});
-      fs.createReadStream("./frontend/styles.css").pipe(response);
+      fs.createReadStream(__dirname+"/frontend/styles.css").pipe(response);
     }
     else if (request.url === "/main.js")
     {
       response.writeHead(200, {"Content-Type": "text/javascript"});
-      fs.createReadStream("./frontend/main.js").pipe(response);
+      fs.createReadStream(__dirname+"/frontend/main.js").pipe(response);
     }
     else if (request.url.includes(musicxmlDir)
              && request.url.includes(".xml"))
     {
       const scoreName = request.url.replace(musicxmlDir, "");
-      const relPath = "." + musicxmlDir + scoreName;
+      const relPath = __dirname + musicxmlDir + scoreName;
       const readStream = fs.createReadStream(relPath);
       
       readStream.on("open", ()=>
@@ -69,7 +69,7 @@ const onRequest = (request, response) =>
            && request.url.includes(".pdf"))
     {
       const scoreName = request.url.replace(pdfDir, "");
-      const relPath = "." + pdfDir + scoreName;
+      const relPath = __dirname + pdfDir + scoreName;
       const readStream = fs.createReadStream(relPath);
       
       readStream.on("open", ()=>
